@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\title{Towards Cloud Bursting for Extreme Scale Supercomputers}
+\author{Tianqi Xu \\ Titech \and Kento Sato \\Titech \and Satoshi Matsuoka\\Titech}
+\date{}
+\maketitle
+\section*{Abstract}
+\section{Introduction}
+\subsection{Cloud Computing}
+\subsection{Cloud Bursting}
+\section{Performance Comparsion}
+\subsection{CPU Performance}
+\subsection{Memory Performance}
+\subsection{Ethernet Performance}
+\section{I/O Buffer Model Overview}
+\section{I/O Buffer Model}
+\section{Evaluation}
+\subsection{Computation Time}
+\begin{equation*}
+\text{Throughput}=
+\begin{cases}
+D_1(C_2) & \text{first solution}\\
+min\{m_1(n_1),I(n_1,n_2),e_2(n_2)\} & \text{second solution}\\
+\end{cases}
+\end{equation*}
+\subsection{Cost}
+\begin{align*}
+def\ \ T_1&=\frac{Data}{D_1(C_2)}\\ T_2&=\frac{Data}{min\{m_1(n_1),I(n_1,n_2),e_2(n_2)\}}\\
+\end{align*}
+\begin{align*}
+A&=C_2\times C_2\_Money(T_1)\\
+B&=C_2\times C_2\_Money(T_2)+n_1\times C_2\_Money(T_2)+n_2\times C_2\_High\_Money(T_2)
+\end{align*}
+\begin{equation*}
+\begin{cases}
+A<B & \text{first solution is better}\\
+A>B & \text{second solution is better}\\
+\end{cases}
+\end{equation*}
+\section{Related Work}
+\section{Conclusion}
+\section*{Reference}
+\end{document}
