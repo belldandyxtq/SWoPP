@@ -1,0 +1,39 @@
+IOR-2.10.3: MPI Coordinated Test of Parallel I/O
+
+Run began: Wed May 21 18:59:54 2014
+Command line used: ./IOR -w -r -B -f exampleScript
+Machine: Linux ip-172-31-5-227.ap-northeast-1.compute.internal
+Start time skew across all tasks: 0.00 sec
+Path: /home/ec2-user/xtqh0
+FS: 1.8 TiB   Used FS: 0.0%   Inodes: 119.2 Mi   Used Inodes: 0.0%
+Participating tasks: 1
+
+Summary:
+	api                = POSIX
+	test filename      = /home/ec2-user/xtqh0/testfile
+	access             = file-per-process
+	pattern            = strided (2 segments)
+	ordering in a file = sequential offsets
+	ordering inter file= no tasks offsets
+	clients            = 1 (1 per node)
+	repetitions        = 1
+	xfersize           = 2 MiB
+	blocksize          = 100 MiB
+	aggregate filesize = 200 MiB
+
+Commencing write performance test.
+Wed May 21 18:59:55 2014
+
+Commencing read performance test.
+Wed May 21 19:00:41 2014
+
+Operation  Max (MiB)  Min (MiB)  Mean (MiB)   Std Dev  Max (OPs)  Min (OPs)  Mean (OPs)   Std Dev  Mean (s)  Op grep #Tasks tPN reps  fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize
+
+---------  ---------  ---------  ----------   -------  ---------  ---------  ----------   -------  --------
+write           4.31       4.31        4.31      0.00       1.08       1.08        1.08      0.00  46.40208   1 1 1 1 0 1 0 0 2 104857600 2097152 209715200 -1 POSIX EXCEL
+read            1.52       1.52        1.52      0.00       0.38       0.38        0.38      0.00 131.74139   1 1 1 1 0 1 0 0 2 104857600 2097152 209715200 -1 POSIX EXCEL
+
+Max Write: 4.31 MiB/sec (4.52 MB/sec)
+Max Read:  1.52 MiB/sec (1.59 MB/sec)
+
+Run finished: Wed May 21 19:02:53 2014

@@ -1,0 +1,45 @@
+IOR-2.10.3: MPI Coordinated Test of Parallel I/O
+
+Run began: Mon Jun  2 06:50:44 2014
+Command line used: ./IOR -w -r -f exampleScript
+Machine: Linux ip-172-31-5-115.ap-northeast-1.compute.internal
+Start time skew across all tasks: 0.00 sec
+Path: /home/ec2-user/s3
+FS: 256.0 TiB   Used FS: 0.0%   Inodes: 0.0 Mi   Used Inodes: -nan%
+Participating tasks: 1
+
+Summary:
+	api                = POSIX
+	test filename      = /home/ec2-user/s3/testfile
+	access             = file-per-process
+	pattern            = strided (2 segments)
+	ordering in a file = sequential offsets
+	ordering inter file= no tasks offsets
+	clients            = 1 (1 per node)
+	repetitions        = 2
+	xfersize           = 2 MiB
+	blocksize          = 100 MiB
+	aggregate filesize = 200 MiB
+
+Commencing write performance test.
+Mon Jun  2 06:50:45 2014
+
+Commencing read performance test.
+Mon Jun  2 06:51:10 2014
+
+Commencing write performance test.
+Mon Jun  2 06:51:29 2014
+
+Commencing read performance test.
+Mon Jun  2 06:51:47 2014
+
+Operation  Max (MiB)  Min (MiB)  Mean (MiB)   Std Dev  Max (OPs)  Min (OPs)  Mean (OPs)   Std Dev  Mean (s)  Op grep #Tasks tPN reps  fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize
+
+---------  ---------  ---------  ----------   -------  ---------  ---------  ----------   -------  --------
+write          10.86       7.79        9.33      1.53       2.71       1.95        2.33      0.38  22.04113   1 1 2 1 0 1 0 0 2 104857600 2097152 209715200 -1 POSIX EXCEL
+read           12.32      11.26       11.79      0.53       3.08       2.81        2.95      0.13  17.00033   1 1 2 1 0 1 0 0 2 104857600 2097152 209715200 -1 POSIX EXCEL
+
+Max Write: 10.86 MiB/sec (11.38 MB/sec)
+Max Read:  12.32 MiB/sec (12.92 MB/sec)
+
+Run finished: Mon Jun  2 06:52:03 2014

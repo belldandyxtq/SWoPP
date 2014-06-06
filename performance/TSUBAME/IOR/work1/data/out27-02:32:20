@@ -1,0 +1,39 @@
+IOR-2.10.3: MPI Coordinated Test of Parallel I/O
+
+Run began: Tue May 27 02:31:21 2014
+Command line used: ./IOR -w -r -B -f exampleScript
+Machine: Linux t2a001121-vm1
+Start time skew across all tasks: 0.00 sec
+Path: /work1/t2g-ebdcrest/13M54027
+FS: 1480.4 TiB   Used FS: 32.5%   Inodes: 2140.0 Mi   Used Inodes: 14.9%
+Participating tasks: 1
+
+Summary:
+	api                = POSIX
+	test filename      = /work1/t2g-ebdcrest/13M54027/testfile
+	access             = file-per-process
+	pattern            = segmented (1 segment)
+	ordering in a file = sequential offsets
+	ordering inter file= no tasks offsets
+	clients            = 1 (1 per node)
+	repetitions        = 1
+	xfersize           = 2 MiB
+	blocksize          = 100 MiB
+	aggregate filesize = 100 MiB
+
+Commencing write performance test.
+Tue May 27 02:31:21 2014
+
+Commencing read performance test.
+Tue May 27 02:31:22 2014
+
+Operation  Max (MiB)  Min (MiB)  Mean (MiB)   Std Dev  Max (OPs)  Min (OPs)  Mean (OPs)   Std Dev  Mean (s)  Op grep #Tasks tPN reps  fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize
+
+---------  ---------  ---------  ----------   -------  ---------  ---------  ----------   -------  --------
+write          76.16      76.16       76.16      0.00      38.08      38.08       38.08      0.00   1.31303   1 1 1 1 0 1 0 0 1 104857600 2097152 104857600 -1 POSIX EXCEL
+read          117.86     117.86      117.86      0.00      58.93      58.93       58.93      0.00   0.84850   1 1 1 1 0 1 0 0 1 104857600 2097152 104857600 -1 POSIX EXCEL
+
+Max Write: 76.16 MiB/sec (79.86 MB/sec)
+Max Read:  117.86 MiB/sec (123.58 MB/sec)
+
+Run finished: Tue May 27 02:31:23 2014

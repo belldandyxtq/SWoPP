@@ -1,0 +1,19 @@
+Connecting to host 10.1.6.167, port 5201
+[  4] local 10.100.200.1 port 42482 connected to 10.1.6.167 port 5201
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[  4]   0.00-1.00   sec  97.1 MBytes   812 Mbits/sec    0    167 KBytes       
+[  4]   1.00-2.00   sec   105 MBytes   883 Mbits/sec    0    181 KBytes       
+[  4]   2.00-3.01   sec   108 MBytes   905 Mbits/sec    0    187 KBytes       
+[  4]   3.01-4.00   sec   107 MBytes   901 Mbits/sec    0    190 KBytes       
+[  4]   4.00-5.00   sec   108 MBytes   909 Mbits/sec    0    191 KBytes       
+[  4]   5.00-6.00   sec   110 MBytes   923 Mbits/sec    0    191 KBytes       
+[  4]   6.00-7.01   sec   105 MBytes   877 Mbits/sec    0    191 KBytes       
+[  4]   7.01-8.01   sec   101 MBytes   847 Mbits/sec    0    191 KBytes       
+[  4]   8.01-9.01   sec   105 MBytes   879 Mbits/sec    0    191 KBytes       
+[  4]   9.01-10.00  sec   108 MBytes   913 Mbits/sec    0    191 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  4]   0.00-10.00  sec  1.03 GBytes   885 Mbits/sec    0             sender
+[  4]   0.00-10.00  sec  1.03 GBytes   885 Mbits/sec                  receiver
+
+iperf Done.

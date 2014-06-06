@@ -1,0 +1,19 @@
+Connecting to host 172.31.12.212, port 5201
+[  4] local 172.31.5.227 port 50753 connected to 172.31.12.212 port 5201
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[  4]   0.00-1.00   sec  22.4 MBytes   188 Mbits/sec    2   63.6 KBytes       
+[  4]   1.00-2.00   sec  26.3 MBytes   221 Mbits/sec    0   83.4 KBytes       
+[  4]   2.00-3.00   sec  26.8 MBytes   225 Mbits/sec    0    100 KBytes       
+[  4]   3.00-4.00   sec  27.9 MBytes   234 Mbits/sec    0    115 KBytes       
+[  4]   4.00-5.00   sec  27.5 MBytes   230 Mbits/sec    0    129 KBytes       
+[  4]   5.00-6.00   sec  9.78 MBytes  82.1 Mbits/sec   10   76.4 KBytes       
+[  4]   6.00-7.00   sec  7.82 MBytes  65.6 Mbits/sec    0   93.3 KBytes       
+[  4]   7.00-8.00   sec  7.80 MBytes  65.4 Mbits/sec    0    102 KBytes       
+[  4]   8.00-9.00   sec  7.86 MBytes  65.9 Mbits/sec    0    112 KBytes       
+[  4]   9.00-10.00  sec  7.75 MBytes  65.0 Mbits/sec    0    122 KBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  4]   0.00-10.00  sec   172 MBytes   144 Mbits/sec   12             sender
+[  4]   0.00-10.00  sec   172 MBytes   144 Mbits/sec                  receiver
+
+iperf Done.
