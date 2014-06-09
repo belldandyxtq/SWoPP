@@ -1,31 +1,15 @@
-\documentclass[JIP]{ipsj}
-
-\usepackage{graphicx}
-\usepackage{latexsym}
-
-\def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
-\def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
-\def\|{\verb|}
-
-\setcounter{volume}{22}
-\setcounter{number}{4}
-\setcounter{page}{1}
-
-\usepackage[varg]{txfonts}%%!!
-\makeatletter%
-\input{ot1txtt.fd}
-\makeatother%
+\documentclass[JIP,draft]{ipsj}
 
 \begin{document}
 
 \title{Towards Cloud Bursting for Extreme Scale Supercomputers}
-\paffiliate{Titech}{Tokyo institute of technology, Meguro, Tokyo, 152-8550,Japan}
-
-\author{Tianqi Xu}{Titech}
-\author{Kento Sato}{Titech}
-\author{Satoshi Matsuoka}{Titech}
 
 \begin{abstract}
+Nowadays Supercomputers are widely used in scientifical computation, such as simulation and data analyse etc. 
+Parallel programming are used to reduce execution time of complex problems, also fully utilizing computing resource of Supercomputers.
+However, large serial applications will occupy computation nodes for a long time and causes some other applications which use numerous nodes to wait in a running queue, leads a low utilization of computing resource.
+One solution is running virtual machine on 
+In this paper, a comparision was made between a Public Cloud (AMAZON EC2) and a Supercomputer (TSUBAME) on Ethernet Performance and leading a 
 \end{abstract}
 
 \begin{keyword}
@@ -36,11 +20,18 @@
 
 %1
 \section{Introduction}
+An increasing number of scientifical application are now running on Supercomputer for high performance computing nodes, large bandwidth and low latency Ethernet environment, also a great number of processors for high scalability.
+High parallel application runs faster on Supercomputer for fully usage of computing resource.
+However, it is usually difficult for a non-computer-scientist to write a parallel program, or re-write some existing applications into parallel version.
+Many serial applications are submitted to Supercomputer and occupy computing nodes for a long time, casusing other applications which offer large number of nodes to wait for nodes, and leading a low utilization of computing resource.
+One solution is running several virtual machines on a single physical machine for increasing utilization, which is used in TSUBAME Supercomputer.
+However even using virtual machines computing nodes still can't meet the request of users, for example, power problem will be critial in summer and nearly half of computing nodes have be shutted down to reduce electricity consumation in the case of TSUBAME Supercomputer. 
+
 
 %2
 \section{Background}
 
 %3
-\section{
+\section{}
 
 \end{document}
