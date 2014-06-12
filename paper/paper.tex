@@ -26,21 +26,34 @@ However, it is usually difficult for a non-computer-scientist to write a paralle
 Many serial applications are submitted to Supercomputer and occupy computing nodes for a long time, casusing other applications which offer large number of nodes to wait for nodes, and leading a low utilization of computing resource.
 One solution is running several virtual machines on a single physical machine for increasing utilization, which is used in TSUBAME Supercomputer.
 However even using virtual machines computing nodes still can't meet the request of users, for example, power problem will be critial in summer and nearly half of computing nodes have be shutted down to reduce electricity consumation in the case of TSUBAME Supercomputer. 
+
 Facing these problems, one solution will be federate supercomputer with public cloud.
 By using pulic cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
 Of cause, there will be many callenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
+Since the biggest problem will be data transfer throughput between two clouds, this paper focuses on methodology of increasing throughput.
 
+In order to increase data transfer throughtput, we propose a I/O bursting buffer architecture that uses several nodes in each cloud as a I/O nodes to achieve high throughput concurrent data transfering, and a I/O bursting buffer model that uses to switch between I/O bursting buffer mode and direct connect mode.
+Since, I/O bursting buffer needs three times data transfer, sometimes direct transfer will achieve a higher throughput, I/O bursting buffer model using a evaluation throughput using I/O bursting buffer and without I/O bursting buffer to determine I/O bursting buffer mode or direct connection mode.
+Also, public cloud usually charges for nodes usage, using I/O bursting buffer may reduce the computation time, but I/O nodes will be charged for money, we also provide a cost-based model, this model evalues total cost with and without I/O nodes.
 
+Our contribution can be summary as following:
+\begin{itemize}
+	\item An architecture of I/O bursting buffer for increasing data transfer throughput between two clouds.
+	\item A throughput-based I/O bursting buffer model uses to switch between I/O bursting mode and direct connection mode in order to achieve a high data transfer when fedorating two clouds, and a cost-based I/O bursting buffer model uses to reduce the total cost.
+	%\item 
+	\item a evaluation of i/o busrting buffer archiecture and two models by using data taken from several benchmarks from tsubame supercomputer and AMAZON EC2 public cloud.
+\end{itemize}
 %2
 \section{Background}
 
 %3
 \section{I/O Bursting Buffer Overview}
-An overview of cloud environment and I/O Burst Buffer Model is described in this section.
+An overview of I/O Burst Buffer archiecture is described in this section. 
+Although our gloal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we federate virtual machine nodes running on supercomputer physical nodes with public cloud.
+In the follow section, we treat the set of supercomputer's virtual machines as a cloud environment
 
 \subsection{Cloud Environment}
 First each cloud is defined as follow:
-
 
 %For security consideration and the fact that IPv4 addresses becomes rare,
 All computing nodes are connected by large bandwidth and interconnection network, note network topology maybe different in each cloud, so topology is not specifid here, interconnection network performance is measured by throughput.
@@ -52,7 +65,7 @@ There is a shared storage for date sharing inside cloud, all computing nodes are
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=6cm]{overview}
+%	\includegraphics[width=6cm]{overview}
 	\caption{overall illustrate of I/O Bursting Buffer Archiecture}
 	\label{overview}
 \end{figure}
@@ -70,26 +83,57 @@ Circles stand for computing nodes, which are used for standard computation.
 Here we assume all computing nodes can communicate with each other, and also I/O buffer nodes and shared storage in the same cloud environment.
 Squares are I/O buffer nodes, these nodes are used for data transfer between clouds, and are assigned with both public and private IP addresses.
 I/O buffer nodes can use the same machine or VM as computing nodes, or can use network optimized nodes for larger throughput, but it is not required here.
-Cylinders are shared storages, which are used to store data used by computing nodes, .
+Cylinders are shared storages, which are used to store data used by computing nodes, usually shared storage is consist of several nodes with a distributed filesystem and uses a better network, offers a large throughput.
+
+%Since there is a big gap between cloud inside data transfering and accross two clouds in throughput, our goal is to fill the gap. 
 
 For convenience, in the following section we assume data is stored in Cloud 1's shared storage, and computing nodes in Cloud 2 are used for computation. 
 
-\section{I/O Bursting Buffer Model}
-
-There are many facts will affect throughput of Internet, 
-
-\subsection{data reading}
+\subsubsection{Data Reading}
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=8cm]{reading}
+%	\includegraphics[width=8cm]{reading}
 	\caption{data reading operation}
 	\label{reading}
 \end{figure}
 
-When computing nodes issue read request, first we check whether the file has been cached in I/O buffer nodes in cloud 1, if not, File will be splited into the same number of I/O buffer nodes in cloud 1, and each I/O buffer node will be assgined a piece of split, then all I/O buffer nodes start reading assigned piece of data from shared storage simultaneously to fully utilize the bandwidth.
+When computing nodes issue read request, first we check whether the file has been cached in I/O buffer nodes in cloud 1, if not, File will be splited into the same number of I/O buffer nodes in cloud 1, and each I/O buffer node will be assgined a piece of split, then all I/O buffer nodes start reading assigned piece of data from shared storage simultaneously to fully utilize the bandwidth, I/O buffer nodes use a main index to refer to the data position in global data.
 
-After transfering data from shared storage, a I/O buffer node in cloud 1 connects with all I/O buffer nodes in cloud 2, then split data piece and into number of I/O buffer nodes in cloud 2, and transfer these pieces to I/O buffer nodes in cloud 2 concurrently in order to fully utilize Internet bandwidth.
+After transfering data from shared storage, a I/O buffer node in cloud 1 will connect with all I/O buffer nodes in cloud 2, then split data piece and into number of I/O buffer nodes in cloud 2, here a sub-index is used to refer to each piece's position, then transfer these pieces to I/O buffer nodes in cloud 2 concurrently in order to fully utilize Internet bandwidth.
 
+When data transfer finished, I/O buffer nodes connect with all computation nodes which needs data, then transfer data to the corresponding position by using main index and sub-index, of cause all data transfer are done in parallel.
+
+\subsubsection{Data Writing}
+
+\begin{figure}[tb]
+	\centering
+%	\includegraphics[width=8cm]{writing}
+	\caption{data writing operation}
+	\label{writing}
+\end{figure}
+
+Data writing operation doing the opposite operation as reading operation.
+
+When a node in cloud 2 issues data writing, output data will be first buffered by I/O server in that node.
+After output finished, I/O server connects with all I/O buffer nodes in the same cloud, and split output data into the number of I/O buffer nodes, then send each piece of data to each I/O buffer nodes with index refering to data position Simultaneously.
+
+I/O buffer nodes then again split data into the number of I/O buffer nodes in cloud 1, like reading operation, here sub-index is used to refer to data position. and 
+
+
+\subsubsection{Index Protocol}
+
+\begin{figure}[tb]
+	\centering
+%	\includegraphics
+	\caption{index protocol}
+	\label{index protocol}
+\end{figure}
+
+\section{I/O Bursting Buffer Model}
+Throughput-based Model and Cost-based Model will be discribed in this section.
+
+\subsection{Throughput-based Model}
+There are many facts will affect throughput of Internet, 
 
 \end{document}
