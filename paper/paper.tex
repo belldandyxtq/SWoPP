@@ -35,37 +35,48 @@ Of cause, there will be many callenges when Supercomputer federates with public 
 \section{Background}
 
 %3
-\section{I/O Bursting Buffer}
+\section{I/O Bursting Buffer Overview}
 An overview of cloud environment and I/O Burst Buffer Model is described in this section.
 
 \subsection{Cloud Environment}
 First each cloud is defined as follow:
 
 
-For security consideration and the fact that IPv4 addresses becomes rare, all computing nodes are connected by large bandwidth and interconnection network, note network topology maybe different in each cloud, so topology is not specifid here, interconnection network performance is measured by throughput.
+%For security consideration and the fact that IPv4 addresses becomes rare,
+All computing nodes are connected by large bandwidth and interconnection network, note network topology maybe different in each cloud, so topology is not specifid here, interconnection network performance is measured by throughput.
 There are a constant number of public IP addresses can be assigned to some computing nodes.
 There is a shared storage for date sharing inside cloud, all computing nodes are connected with shared storage, also the filesystem of shared storage is not specified and performance is measured by throughput.
 
 
 \subsection{I/O Bursting Buffer Archiecture}
-Fig.~\ref{overview} is the overall illustrate of I/O Bursting Buffer Model
+
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=6cm]{overview}
 	\caption{overall illustrate of I/O Bursting Buffer Archiecture}
 	\label{overview}
 \end{figure}
+
+Fig.~\ref{overview} is the overall illustrate of I/O Bursting Buffer Model
+
 There are two clouds here, cloud condition is defined above.
-Orange arrows stand for innerconnection networks, although two clouds used the same color for innerconnection networks, bandwidth can be different, also the topolopies are not specified and can be different in each cloud.
+
+Arrows stand for network connection.
+Orange arrows are innerconnection networks inside cloud, although two clouds used the same color for innerconnection networks, bandwidth can be different, also the topolopies are not specified and can be different in each cloud.
+Black arrows are Internet connections, since there are a few amount of public IP addresses avaliable, only I/O buffer nodes are connect to Internet, also the amount of avaliable public IP address becomes the upper bound of the amount of I/O buffer nodes in each cloud. 
+Although nodes with private IP address can use route or other net device to connect to Internet, but consider about security problem, also using route will reduce concurrent data transfer rate, here we assume all nodes in cloud only connect to local private network except I/O buffer nodes which connect to both local network and Internet.
+
 Circles stand for computing nodes, which are used for standard computation.
+Here we assume all computing nodes can communicate with each other, and also I/O buffer nodes and shared storage in the same cloud environment.
 Squares are I/O buffer nodes, these nodes are used for data transfer between clouds, and are assigned with both public and private IP addresses.
 I/O buffer nodes can use the same machine or VM as computing nodes, or can use network optimized nodes for larger throughput, but it is not required here.
-cylinders are shared storages, which are used to store data used by computing nodes.
-Both I/O buffer nodes and computing nodes are connected with shared storages.
+Cylinders are shared storages, which are used to store data used by computing nodes, .
 
 For convenience, in the following section we assume data is stored in Cloud 1's shared storage, and computing nodes in Cloud 2 are used for computation. 
 
 \section{I/O Bursting Buffer Model}
+
+There are many facts will affect throughput of Internet, 
 
 \subsection{data reading}
 
