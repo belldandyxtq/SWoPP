@@ -1,4 +1,5 @@
 \documentclass[JIP,draft]{ipsj}
+\usepackage{graphicx}
 
 \begin{document}
 \title{Towards Cloud Bursting for Extreme Scale Supercomputers}
@@ -12,7 +13,7 @@ In this paper, a comparision was made between a Public Cloud (AMAZON EC2) and a 
 \end{abstract}
 
 \begin{keyword}
-Supercomputer, Cloud, I/O Buffer Model
+Supercomputer, Cloud, I/O Bursting Buffer Model
 \end{keyword}
 
 \maketitle
@@ -34,7 +35,42 @@ Of cause, there will be many callenges when Supercomputer federates with public 
 \section{Background}
 
 %3
-\section{I/O Buffer Model}
-\subsection{
+\section{I/O Bursting Buffer}
+An overview of cloud environment and I/O Burst Buffer Model is described in this section.
+
+\subsection{Cloud Environment}
+First each cloud is defined as follow:
+
+
+For security consideration and the fact that IPv4 addresses becomes rare, all computing nodes are connected by large bandwidth and interconnection network, note network topology maybe different in each cloud, so topology is not specifid here, interconnection network performance is measured by throughput.
+There are a constant number of public IP addresses can be assigned to some computing nodes.
+There is a shared storage for date sharing inside cloud, all computing nodes are connected with shared storage, also the filesystem of shared storage is not specified and performance is measured by throughput.
+
+
+\subsection{I/O Bursting Buffer Archiecture}
+Fig.~\ref{overview} is the overall illustrate of I/O Bursting Buffer Model
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=6cm]{overview}
+	\caption{overall illustrate of I/O Bursting Buffer Archiecture}
+	\label{overview}
+\end{figure}
+There are two clouds here, cloud condition is defined above.
+Orange arrows stand for innerconnection networks, although two clouds used the same color for innerconnection networks, bandwidth can be different, also the topolopies are not specified and can be different in each cloud.
+Circles stand for computing nodes, which are used for standard computation.
+Squares are I/O buffer nodes, these nodes are used for data transfer between clouds, and are assigned with both public and private IP addresses.
+I/O buffer nodes can use the same machine or VM as computing nodes, or can use network optimized nodes for larger throughput, but it is not required here.
+cylinders are shared storages, which are used to store data used by computing nodes.
+Both I/O buffer nodes and computing nodes are connected with shared storages.
+
+For convenience, in the following section we assume data is stored in Cloud 1's shared storage, and computing nodes in Cloud 2 are used for computation. 
+
+\section{I/O Bursting Buffer Model}
+
+\subsection{data reading}
+When computing nodes issue read request, first we check whether the file has been cached in I/O buffer nodes in cloud 1, if not, File will be splited into the same number of I/O buffer nodes in cloud 1, and each I/O buffer node will be assgined a piece of split, then all I/O buffer nodes start reading assigned piece of data from shared storage simultaneously to fully utilize the bandwidth.
+
+After transfering data from shared storage, a I/O buffer node in cloud 1 connects with all I/O buffer nodes in cloud 2, then split data piece and into number of I/O buffer nodes in cloud 2, and transfer these pieces to I/O buffer nodes in cloud 2 concurrently in order to fully utilize Internet bandwidth.
+
 
 \end{document}
