@@ -68,6 +68,14 @@ For convenience, in the following section we assume data is stored in Cloud 1's 
 \section{I/O Bursting Buffer Model}
 
 \subsection{data reading}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=8cm]{reading}
+	\caption{data reading operation}
+	\label{reading}
+\end{figure}
+
 When computing nodes issue read request, first we check whether the file has been cached in I/O buffer nodes in cloud 1, if not, File will be splited into the same number of I/O buffer nodes in cloud 1, and each I/O buffer node will be assgined a piece of split, then all I/O buffer nodes start reading assigned piece of data from shared storage simultaneously to fully utilize the bandwidth.
 
 After transfering data from shared storage, a I/O buffer node in cloud 1 connects with all I/O buffer nodes in cloud 2, then split data piece and into number of I/O buffer nodes in cloud 2, and transfer these pieces to I/O buffer nodes in cloud 2 concurrently in order to fully utilize Internet bandwidth.
