@@ -42,21 +42,21 @@ Our contribution can be summary as following:
 	\item An architecture of I/O bursting buffer for increasing data transfer throughput between two clouds.
 	\item A throughput-based I/O bursting buffer model uses to switch between I/O bursting mode and direct connection mode in order to achieve a high data transfer when federating two clouds, and a cost-based I/O bursting buffer model uses to reduce the total cost.
 	%\item 
-	\item a evaluation of i/o bursting buffer architecture and two models by using data taken from several benchmarks from tsubame supercomputer and AMAZON EC2 public cloud.
+	\item a evaluation of I/O bursting buffer architecture and two models by using data taken from several benchmarks from tsubame supercomputer and AMAZON EC2 public cloud.
 \end{itemize}
 %2
 \section{Background}
 
 %3
 \section{I/O Bursting Buffer Overview}
-An overview of I/O Burst Buffer architecture and two operations: reading writing are described in this section.
+An overview of I/O Burst Buffer architecture and two kinds of connection: direct connection and I/O bursting buffer are described in this section.
 Although our goal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we consider about federating virtual machine nodes which running on supercomputer physical nodes with public cloud.
-Since public clouds also run virtual machine on physical nodes, in the follow section, we treat the set of supercomputer's virtual machines as a cloud environment.
+Since public clouds also run virtual machine on physical nodes, in the follow section, we treat the set of supercomputer's virtual machines as a cloud environment, also because only a few public IP address available in each cloud, I/O buffer nodes are required even in direct connection model.
 
-Reading operation describes operations when issues reading data from another cloud storage, and writing operation describes operation when issues writing data to another cloud storage.
+%Reading operation describes operations when issues reading data from another cloud storage, and writing operation describes operation when issues writing data to another cloud storage
 
-Migration operation occurs when some nodes have to be shutted down in one cloud 
-all jobs running on these nodes have to be backed up by using snapshot, 
+%Migration operation occurs when some nodes have to be shutted down in one cloud 
+%all jobs running on these nodes have to be backed up by using snapshot, 
 
 \subsection{Cloud Environment}
 First each cloud is defined as follow:
@@ -95,7 +95,24 @@ Cylinders are shared storages, which are used to store data used by computing no
 
 For convenience, in the following section we assume data is stored in Cloud 1's shared storage, and computing nodes in Cloud 2 are used for computation. 
 
-\subsubsection{Data Reading}
+\subsubsection{Direct Connection}
+
+\begin{figure}[tb]
+	\centering
+%	\includegraphics[width=8cm]{direct}
+	\caption{direct access}
+	\label{direct access}
+\end{figure}
+
+As Fig.~\ref{} shows, direct connection is a connection between I/O buffer nodes in cloud 2 and storage cloud 2 directly, only one side I/O buffer nodes are used in this model.
+When computing nodes issue a read request, data firstly be splitted into number of I/O buffer nodes in cloud 2 pieces and assign one I/O buffer node one piece, then I/O buffer nodes start reading assigned data concurrently in order to fully utilize Internet bandwidth.
+After reading finished, I/O buffer nodes send data to each computing node Simultaneously, there data will be restructure by using protocol described below.
+
+Like reading, when computing nodes start to output data, first data will be buffered inside that nodes.
+After output finished, data will be splitted into number of I/O buffer nodes in cloud 2 pieces, and assign one I/O node one piece, then data will be sent to all I/O buffer nodes concurrently.
+When I/O buffer nodes received data, then they writing data back to storage in cloud 1.
+
+\subsubsection{I/O Bursting Buffer}
 
 \begin{figure}[tb]
 	\centering
@@ -104,22 +121,22 @@ For convenience, in the following section we assume data is stored in Cloud 1's 
 	\label{reading}
 \end{figure}
 
-When computing nodes issue read request, first we check whether the file has been cached in I/O buffer nodes in cloud 1, if not, File will be splitted into the same number of I/O buffer nodes in cloud 1, and each I/O buffer node will be assgined a piece of split, then all I/O buffer nodes start reading assigned piece of data from shared storage simultaneously to fully utilize the bandwidth.% I/O buffer nodes use a main index to refer to the data position in global data.
-
-After transferring data from shared storage finished, I/O buffer nodes in cloud 1 will connect with all I/O buffer nodes in cloud 2, then split data piece and into number of I/O buffer nodes in cloud 2,
-%here a sub-index is used to refer to each piece's position, 
-then transfer these pieces to I/O buffer nodes in cloud 2 concurrently in order to fully utilize Internet bandwidth.
-
-When data transfer finished, I/O buffer nodes connect with all computation nodes which needs data, then transfer data to the corresponding position by using a index protocol described below, of cause all data transfer are done in parallel.
-
-\subsubsection{Data Writing}
-
 \begin{figure}[tb]
 	\centering
 %	\includegraphics[width=8cm]{writing}
 	\caption{data writing operation}
 	\label{writing}
 \end{figure}
+
+I/O bursting buffer model may be used when throughput of direct connection between I/O buffer nodes and storage in different cloud is smaller then throughput between I/O buffer nodes, it is possible when storage is consist of few nodes, and direct connection will be 1-N connection, on the contrary, connection between I/O buffer nodes is N-N connection, has larger parallelism.
+
+When computing nodes issue read request, first we check whether the file has been cached in I/O buffer nodes in cloud 1, if not, File will be splitted into the same number of I/O buffer nodes in cloud 1, and each I/O buffer node will be assigned a piece of split, then all I/O buffer nodes start reading assigned piece of data from shared storage simultaneously to fully utilize the bandwidth.% I/O buffer nodes use a main index to refer to the data position in global data.
+
+After transferring data from shared storage finished, I/O buffer nodes in cloud 1 will connect with all I/O buffer nodes in cloud 2, then split data piece and into number of I/O buffer nodes in cloud 2,
+%here a sub-index is used to refer to each piece's position, 
+then transfer these pieces to I/O buffer nodes in cloud 2 concurrently in order to fully utilize Internet bandwidth.
+
+When data transfer finished, I/O buffer nodes connect with all computation nodes which needs data, then transfer data to the corresponding position by using a index protocol described below, of cause all data transfer are done in parallel.
 
 Data writing operation doing the opposite operation as reading operation.
 
@@ -208,9 +225,10 @@ here we compute cost by using $T_1,T_2$:
 				     &+n_2\times C_2\_High\_Money(T_2)
 \end{align}
 \subsection{Migration Model}
-%\begin{equation}
-
-%\end{eqaution}
+Since there are some condition that some supercomputer nodes must be shutted down, and jobs running on these nodes have to be migrate to another cloud. There are 
+\begin{equation}
+	Data	
+\end{equation}
 \section{Evaluation}
-
+In this section, a simulation will be introduced based on data taking from several benchmarks on both TSUBAME and AMAZON EC2, 
 \end{document}

@@ -1,0 +1,39 @@
+IOR-2.10.3: MPI Coordinated Test of Parallel I/O
+
+Run began: Mon Jun 16 17:30:42 2014
+Command line used: ./IOR -w -r -c -f exampleScript
+Machine: Linux xtqh0.m.gsic.titech.ac.jp
+Start time skew across all tasks: 0.00 sec
+Path: /home/xtq/s3
+FS: 256.0 TiB   Used FS: 0.0%   Inodes: 0.0 Mi   Used Inodes: -nan%
+Participating tasks: 32
+
+Summary:
+	api                = MPIIO (version=3, subversion=0)
+	test filename      = /home/xtq/s3/testfile
+	access             = file-per-process, collective
+	pattern            = segmented (1 segment)
+	ordering in a file = sequential offsets
+	ordering inter file= no tasks offsets
+	clients            = 32 (32 per node)
+	repetitions        = 1
+	xfersize           = 2 MiB
+	blocksize          = 100 MiB
+	aggregate filesize = 3.12 GiB
+
+Commencing write performance test.
+Mon Jun 16 17:31:03 2014
+
+Commencing read performance test.
+Mon Jun 16 17:31:20 2014
+
+Operation  Max (MiB)  Min (MiB)  Mean (MiB)   Std Dev  Max (OPs)  Min (OPs)  Mean (OPs)   Std Dev  Mean (s)  Op grep #Tasks tPN reps  fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize
+
+---------  ---------  ---------  ----------   -------  ---------  ---------  ----------   -------  --------
+write          93.98      93.98       93.98      0.00      46.99      46.99       46.99      0.00  34.05119   32 32 1 1 0 1 0 0 1 104857600 2097152 3355443200 -1 MPIIO EXCEL
+read           83.97      83.97       83.97      0.00      41.99      41.99       41.99      0.00  38.10675   32 32 1 1 0 1 0 0 1 104857600 2097152 3355443200 -1 MPIIO EXCEL
+
+Max Write: 93.98 MiB/sec (98.54 MB/sec)
+Max Read:  83.97 MiB/sec (88.05 MB/sec)
+
+Run finished: Mon Jun 16 17:31:59 2014
