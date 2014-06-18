@@ -22,18 +22,17 @@ Supercomputer, Cloud, I/O Bursting Buffer Model
 %1
 \section{Introduction}
 An increasing number of scientific applications are now running on Supercomputer for high performance computing nodes, large bandwidth and low latency interconnection environment, also a great number of processors for high scalability.
-High parallel application runs faster on Supercomputer for fully usage of computing resource.
-However, it is usually difficult for a non-computer-scientist to write a parallel program, or re-write some existing applications into parallel version.
-Many serial applications are submitted to Supercomputer and occupy computing nodes for a long time, causing other applications which offer large number of nodes to wait for nodes, and leading a low utilization of computing resource.
-One solution is running several virtual machines on a single physical machine for increasing utilization, which is used in TSUBAME Supercomputer.
-However even using virtual machines computing nodes still can't meet the request of users, for example, power problem will be critical in summer and nearly half of computing nodes have be shutted down to reduce electricity consumption in the case of TSUBAME Supercomputer. 
+Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
 
-Facing these problems, one solution will be federate supercomputer with public cloud.
-By using public cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
-Of cause, there will be many challenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
-Since the biggest problem will be data transfer throughput between two clouds, this paper focuses on methodology of increasing throughput.
+%Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
+However, when operating a supercomputer, there are some problems, high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
+Another problem is the power problem in summer, in order to reduce power comsumation, some nodes will be forced to be shutted down, reducing numbers of nodes will make the first problem more serous.
+One solution is federating supercomputer with a public cloud, moving parts of job and computation to public cloud when there are not enough computing nodes available for user's request, which is known as cloud bursting.
+Although cloud bursting is used by several companies and already have some sophisticated solution, since there are a significant performance gap between supercomputer nodes and cloud nodes, there will still be several problems when we try to ferderate a supercomputer with a public cloud.
+The biggest problem will be data transfer throughput between two environment, supercomputers usual deal with Gigabyte or even Petabyte input and output of data, low I/O throughput will suffer supercomputer user. This paper focuses on methodology of increasing throughput when we do federation.
 
 In order to increase data transfer throughput, we propose a I/O bursting buffer architecture that uses several nodes in each cloud as a I/O nodes to achieve high throughput concurrent data transferring, and a I/O bursting buffer model that uses to switch between I/O bursting buffer mode and direct connect mode.
+This I/O bursting buffer architecture can be mainly used two situation, first in data I/O, the other one will be when there are some nodes need to migrate from a cloud to another cloud with snapshot, snapshots can be transferred without be stored to shared storage.
 Since, I/O bursting buffer needs three times data transfer, sometimes direct transfer will achieve a higher throughput, I/O bursting buffer model using a evaluation throughput using I/O bursting buffer and without I/O bursting buffer to determine I/O bursting buffer mode or direct connection mode.
 Also, public cloud usually charges for nodes usage, using I/O bursting buffer may reduce the computation time, but I/O nodes will be charged for money, we also provide a cost-based model, this model evaluate total cost with and without I/O nodes.
 
@@ -42,10 +41,27 @@ Our contribution can be summary as following:
 	\item An architecture of I/O bursting buffer for increasing data transfer throughput between two clouds.
 	\item A throughput-based I/O bursting buffer model uses to switch between I/O bursting mode and direct connection mode in order to achieve a high data transfer when federating two clouds, and a cost-based I/O bursting buffer model uses to reduce the total cost.
 	%\item 
-	\item a evaluation of I/O bursting buffer architecture and two models by using data taken from several benchmarks from tsubame supercomputer and AMAZON EC2 public cloud.
+	\item Evaluating I/O bursting buffer architecture and two models by using data obtained from several benchmarks from tsubame supercomputer and AMAZON EC2 public cloud.
 \end{itemize}
 %2
-\section{Background}
+The remainder of this paper is orginized as follow:in section 2, the motivation and background of this study will be introduced, a overview of I/O bursting buffer Architecture including direct connection and I/O bursting buffer will be introduced in section 3, and the model used to switch between two modes will be described in section 4, a simulation result of our model %based on data obtained from several benchmark on TSUBAME V queue and AMAZON EC2 
+will be shown in section 5, and finally, conclusion and related work will be seen in section 6.
+
+\section{Motivation and Background}
+
+%When people analyze large size of data, parallel programme is widely used in order to reduce computation time, especially when using supercomputer.
+%However, it is usually difficult for a non-computer-scientist to write a parallel program, or re-write some existing applications into parallel version.
+%Many serial applications are submitted to Supercomputer and occupy computing nodes for a long time, causing other applications which offer large number of nodes to wait for nodes, and leading a low utilization of computing resource.
+%Consider following situation, there are 50 nodes available when a user submits a serial program using 1 node for 4 hours, after an hour a user try to run a program using 50 nodes, then he can't start his program until the first user finished his job.
+%Such situation happens frequently when thousands and hundreds of users using one system at the same time and leading a low utilization of computing resource.
+%One solution is running several virtual machines on a single physical machine for increasing utilization, which is used in TSUBAME Supercomputer, but sometime it still can't meet the request.
+%For request not always reaches peak, it is not wise to increase nodes just for a temporary request peak.
+%However even using virtual machines computing nodes still can't meet the request of users, for example, power problem will be critical in summer and nearly half of computing nodes have be shutted down to reduce electricity consumption in the case of TSUBAME Supercomputer.
+Since the 
+Facing these problems, one solution will be federate supercomputer with public cloud.
+By using public cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
+Of cause, there will be many challenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
+
 
 %3
 \section{I/O Bursting Buffer Overview}
@@ -224,6 +240,8 @@ here we compute cost by using $T_1,T_2$:
 				     &+n_1\times C_1\_High\_Money(T_2)\\ \nonumber
 				     &+n_2\times C_2\_High\_Money(T_2)
 \end{align}
+
+
 \subsection{Migration Model}
 Since there are some condition that some supercomputer nodes must be shutted down, and jobs running on these nodes have to be migrate to another cloud. There are 
 \begin{equation}
