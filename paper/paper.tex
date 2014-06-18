@@ -120,7 +120,7 @@ There is a shared storage for date sharing inside cloud, all computing nodes are
 
 \begin{figure}[tb]
 	\centering
-%	\includegraphics[width=6cm]{overview}
+	\includegraphics[width=6cm]{overview}
 	\caption{overall illustrate of I/O Bursting Buffer Architecture}
 	\label{overview}
 \end{figure}
@@ -165,14 +165,14 @@ When I/O buffer nodes received data, then they writing data back to storage in c
 
 \begin{figure}[tb]
 	\centering
-%	\includegraphics[width=8cm]{reading}
+	\includegraphics[width=8cm]{reading}
 	\caption{data reading operation}
 	\label{reading}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
-%	\includegraphics[width=8cm]{writing}
+	\includegraphics[width=8cm]{writing}
 	\caption{data writing operation}
 	\label{writing}
 \end{figure}
@@ -217,15 +217,15 @@ When using I/O buffer nodes
 
 \section{I/O Bursting Buffer Model}
 
-\begin{figure}[tb]
-	\centering
+%\begin{figure}[tb]
+%	\centering
 %	\includegraphics
-	\caption{definition}
-	\label{definition}
-\end{figure}
+%	\caption{definition}
+%	\label{definition}
+%\end{figure}
 
 Throughput-based Model and Cost-based Model will be described in this section.
-All definitions used are described in Fig.~\ref{definition}:
+All definitions used are described in Fig.~\ref{overview}:
 
 \begin{itemize}
 	\item Numbers of computing nodes are $c_1,c_2$, and numbers of I/O buffer nodes are $n_1, n_2$ respectively.
@@ -289,6 +289,13 @@ Since there are some condition that some supercomputer nodes must be shutted dow
 \end{equation}
 
 \section{Evaluation}
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=8cm]{ThroughputAMAZONTSUBAME}
+	\caption{Throughput between AMAZON and TSUBAME}
+	\label{Throughput between AMAZON and TSUBAME}
+\end{figure}
+
 In this section, a simulation will be introduced based on data taking from several benchmarks on both TSUBAME and AMAZON EC2.
 
 \section{Conclusion and Related Work}
