@@ -27,6 +27,7 @@ Data size need to be processed grows rapidly these days, which is known as Big D
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
 However, when operating a supercomputer, there are some problems, high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
 Another problem is the power problem in summer, in order to reduce power comsumation, some nodes will be forced to be shutted down, reducing numbers of nodes will make the first problem more serous.
+
 One solution is federating supercomputer with a public cloud, moving parts of job and computation to public cloud when there are not enough computing nodes available for user's request, which is known as cloud bursting.
 Although cloud bursting is used by several companies and already have some sophisticated solution, since there are a significant performance gap between supercomputer nodes and cloud nodes, there will still be several problems when we try to ferderate a supercomputer with a public cloud.
 The biggest problem will be data transfer throughput between two environment, supercomputers usual deal with Gigabyte or even Petabyte input and output of data, low I/O throughput will suffer supercomputer user. This paper focuses on methodology of increasing throughput when we do federation.
@@ -57,11 +58,43 @@ will be shown in section 5, and finally, conclusion and related work will be see
 %One solution is running several virtual machines on a single physical machine for increasing utilization, which is used in TSUBAME Supercomputer, but sometime it still can't meet the request.
 %For request not always reaches peak, it is not wise to increase nodes just for a temporary request peak.
 %However even using virtual machines computing nodes still can't meet the request of users, for example, power problem will be critical in summer and nearly half of computing nodes have be shutted down to reduce electricity consumption in the case of TSUBAME Supercomputer.
-Since the 
-Facing these problems, one solution will be federate supercomputer with public cloud.
-By using public cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
-Of cause, there will be many challenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
+%Facing these problems, one solution will be federate supercomputer with public cloud.
+%By using public cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
+%Of cause, there will be many challenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
 
+Data shown in this section is taken from AMAZON EC2 m3.medium nodes, which have 3.75GiB memory and Moderate Network Performance and TSUBAME 2.5 V queue, which uses VM.
+\begin{figure}[tb]
+	\centering
+	%\includegraphics{}
+	\caption{I/O Throughput to Lustre inside TSUBAME direct mount}
+	\label{throughput TSUBAME}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	%\includegraphics{}
+	\caption{I/O Throughput from AMAZON EC2 to TSUBAME Lustre by using sshfs}
+	\label{throughput AMAZON to TSUBAME Lustre}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	%\includegraphics{}
+	\caption{point to point connection TSUBAME}
+	\label{point to point connection TSUBAME}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	%\includegraphics{}
+	\caption{point to point connection inside AMAZON}
+	\label{point to point connection AMAZON}
+\end{figure}
+
+From Fig.~\ref{throughput TSUBAME} and Fig.~\ref{throughput AMAZON to TSUBAME Lustre} we can see that the I/O throughput of innerconnection inside supercomputer is quit larger than that from AMAZON.
+If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of low throughput, for a data sensitive application, it will be devastating.
+
+But when we compare Fig.~\ref{point to point connection TSUBAME} with FIg.~\ref{point to point connection AMAZON}, the innerconnection throughput 
 
 %3
 \section{I/O Bursting Buffer Overview}
@@ -120,7 +153,7 @@ For convenience, in the following section we assume data is stored in Cloud 1's 
 	\label{direct access}
 \end{figure}
 
-As Fig.~\ref{} shows, direct connection is a connection between I/O buffer nodes in cloud 2 and storage cloud 2 directly, only one side I/O buffer nodes are used in this model.
+As Fig.~\ref{direct access} shows, direct connection is a connection between I/O buffer nodes in cloud 2 and storage cloud 2 directly, only one side I/O buffer nodes are used in this model.
 When computing nodes issue a read request, data firstly be splitted into number of I/O buffer nodes in cloud 2 pieces and assign one I/O buffer node one piece, then I/O buffer nodes start reading assigned data concurrently in order to fully utilize Internet bandwidth.
 After reading finished, I/O buffer nodes send data to each computing node Simultaneously, there data will be restructure by using protocol described below.
 
@@ -174,6 +207,13 @@ Then I/O buffer nodes write data to storage in cloud 1.
 
 As Fig.~\ref{index protocol} shows, two indexs are used in this protocol: main index and sub-index.
 There are two phases of data splitting in both reading and writing operation, 
+
+\subsubsection{Node Migration}
+Node migration happens when some nodes have to be shutted down due to some situation like power problem in summer, and still need to provide service to users.
+In these cases, nodes will be migrate by snapshot, usually snapshots of these nodes will first be stored into shared storage, then these snapshots will be transferred to another cloud, and start VM by using these snapshots.
+
+However, the low throughput between direct connection of nodes and storage in different environment will still be a bottleneck for quick migration.
+When using I/O buffer nodes 
 
 \section{I/O Bursting Buffer Model}
 
@@ -247,6 +287,10 @@ Since there are some condition that some supercomputer nodes must be shutted dow
 \begin{equation}
 	Data	
 \end{equation}
+
 \section{Evaluation}
-In this section, a simulation will be introduced based on data taking from several benchmarks on both TSUBAME and AMAZON EC2, 
+In this section, a simulation will be introduced based on data taking from several benchmarks on both TSUBAME and AMAZON EC2.
+
+\section{Conclusion and Related Work}
+
 \end{document}
