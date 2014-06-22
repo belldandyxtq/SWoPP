@@ -6,11 +6,21 @@
 \title{Towards Cloud Bursting for Extreme Scale Supercomputers}
 
 \begin{abstract}
-Nowadays Supercomputers are widely used in scientifical computation, such as simulation and data analyse etc. 
-Parallel programming are used to reduce execution time of complex problems, also fully utilizing computing resource of Supercomputers.
-However, large serial applications will occupy computation nodes for a long time and causes some other applications which use numerous nodes to wait in a running queue, leads a low utilization of computing resource.
-One solution is running virtual machine on 
-In this paper, a comparision was made between a Public Cloud (AMAZON EC2) and a Supercomputer (TSUBAME) on Ethernet Performance and leading a 
+%Parallel programming are used to reduce execution time of complex problems, also fully utilizing computing resource of Supercomputers.
+
+%supercomputers usually consist of a large number of nodes, provide high parallelism for multi-user.
+%However computing nodes in supercomputers will not meet the request in some situation, such as some nodes have to be shutted down to reduce electric consumption in summer or just several serial applications occupy nodes making others must wait.
+%large serial applications will occupy computation nodes for a long time and causes some other applications which use numerous nodes to wait in a running queue, leads a low utilization of computing resource.
+%One solution is running virtual machine on 
+%In this paper, a comparision was made between a Public Cloud (AMAZON EC2) and a Supercomputer (TSUBAME) on Ethernet Performance and leading a 
+%In order to satisfy these temporary request peak, we are trying to federate supercomputers with public cloud, which is known as cloud bursting.
+%Although some sophisticated solutions are available, still we are facing several challenges, since there are a significant performance gap between supercomputers and public cloud.
+%In this paper, we focus on I/O throughput between these two environments, we propose a I/O Bursting Buffer Model to burst I/O throughput between supercomputer and public cloud and reduce the cost for extra time usage caused by low I/O throughput.
+%we also provide a simulation based on several benchmarks on TSUBAME supercomputer and AMAZON EC2 public cloud.
+%The result shows our model can provide a stable and high I/O throughput as well as a low cost in most cases.
+
+Extreme-scale HPC systems, which consist of a large number of compute nodes, can provide high computational capacity for multiple users. However, computing nodes in the systems occasionally can not meet the demand due to bursty job requests in short period times. In order to accommodate the bursty requests, we consider federating HPC systems with public clouds, which is known as cloud bursting. Although the federated systems can acquire virtually infinite computational power with cloud bursting, the QoS may not be guaranteed due to a significant performance gap between HPC systems and public clouds. The most critical problem is a gap in I/O performance. In this paper, we propose an I/O acceleration technique using distributed cloud bursting buffers. We also create the I/O performance model to explore the effectiveness. Our model-based simulations, which target the TSUBAME supercomputer for an HPC system, and AMAZON EC2 for a public cloud, show that the distributed cloud busting buffer can improve I/O throughput while reducing the cost.
+
 \end{abstract}
 
 \begin{keyword}
@@ -22,10 +32,11 @@ Supercomputer, Cloud, I/O Bursting Buffer Model
 %1
 \section{Introduction}
 An increasing number of scientific applications are now running on Supercomputer for high performance computing nodes, large bandwidth and low latency interconnection environment, also a great number of processors for high scalability.
-Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
+%Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
 
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
-However, when operating a supercomputer, there are some problems, high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
+Although supercomputer can offer a high computational cpacity, there are some situations HPC system can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until perious job finished although there are
+%high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
 Another problem is the power problem in summer, in order to reduce power comsumation, some nodes will be forced to be shutted down, reducing numbers of nodes will make the first problem more serous.
 
 One solution is federating supercomputer with a public cloud, moving parts of job and computation to public cloud when there are not enough computing nodes available for user's request, which is known as cloud bursting.
@@ -62,7 +73,7 @@ will be shown in section 5, and finally, conclusion and related work will be see
 %By using public cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
 %Of cause, there will be many challenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
 
-Data shown in this section is taken from AMAZON EC2 m3.medium nodes, which have 3.75GiB memory and Moderate Network Performance and TSUBAME 2.5 V queue, which uses VM.
+%Data shown in this section is taken from AMAZON EC2 m3.medium nodes, which have 3.75GiB memory and Moderate Network Performance and TSUBAME 2.5 V queue, which uses VM.
 \begin{figure}[tb]
 	\centering
 	%\includegraphics{}
@@ -80,40 +91,43 @@ Data shown in this section is taken from AMAZON EC2 m3.medium nodes, which have 
 \begin{figure}[tb]
 	\centering
 	%\includegraphics{}
-	\caption{point to point connection TSUBAME}
-	\label{point to point connection TSUBAME}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	%\includegraphics{}
 	\caption{point to point connection inside AMAZON}
 	\label{point to point connection AMAZON}
-\end{figure}
+\end{figure} 
+As we know, throughput gap between innerconnection network and Internet is extremely large.
+Fig.~\ref{throughput TSUBAME} shows I/O throughput between TSUBAME V queue nodes and TSBUAME Lustre file system, we can see that the aggreate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in [].
+On the other hand, Fig.~\ref{throughput AMAZON to TSUBAME Lustre} shows I/O throughput between AMAZON EC2 m3.medium nodes, which have moderate network performance, and TSUBAME Lustre file system, the aggreate throughput is only 100-140 MB/s, about 40-80 times smaller than throughput inside TSUBAME.
+%From Fig.~\ref{throughput TSUBAME} and Fig.~\ref{throughput AMAZON to TSUBAME Lustre} we can see that the I/O throughput of innerconnection inside supercomputer is quit larger than that from AMAZON.
+If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of I/O low throughput,for a data sensitive application, it will be devastating, also according to AMAZON's pay-as-you-go policy, longer execution time means more cost.
 
-From Fig.~\ref{throughput TSUBAME} and Fig.~\ref{throughput AMAZON to TSUBAME Lustre} we can see that the I/O throughput of innerconnection inside supercomputer is quit larger than that from AMAZON.
-If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of low throughput, for a data sensitive application, it will be devastating.
-
-But when we compare Fig.~\ref{point to point connection TSUBAME} with FIg.~\ref{point to point connection AMAZON}, the innerconnection throughput 
+%But when we compare Fig.~\ref{point to point connection TSUBAME} with FIg.~\ref{point to point connection AMAZON}, the innerconnection throughput 
+However, if we consider innerconnection throughput, as shown in Fig.\ref{point to point connection TSUBAME}, although each node can achieve only 1GB/s, the influence between nodes is extremely small, and it shows a strong scalability.
+Since we can achieve a high innerconnection throughput inside a system (HPC system, public cloud), we consider use some nodes as a buffer nodes, using a buffer queue to buffer I/O data and achieve a high throughput.
 
 %3
 \section{I/O Bursting Buffer Overview}
-An overview of I/O Burst Buffer architecture and two kinds of connection: direct connection and I/O bursting buffer are described in this section.
-Although our goal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we consider about federating virtual machine nodes which running on supercomputer physical nodes with public cloud.
-Since public clouds also run virtual machine on physical nodes, in the follow section, we treat the set of supercomputer's virtual machines as a cloud environment, also because only a few public IP address available in each cloud, I/O buffer nodes are required even in direct connection model.
+
+\begin
+
+An overview of I/O burst buffer architecture and two kinds of connection: direct connection and I/O bursting buffer are described in this section.
+The main idea is we use some of computing nodes as a I/O buffer nodes in each system, I/O data will first buffered in these I/O buffer nodes, and then transferred to storage in another system, 
+Two kinds of buffer are used in our I/O burst buffer architecture, the first one is in client computing node, first buffer user I/O in the same node, another one is in all I/O buffer nodes in the same system
+%Although our goal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we consider about federating virtual machine nodes which running on supercomputer physical nodes with public cloud.
+%Since public clouds also run virtual machine on physical nodes, in the follow section, we treat the set of supercomputer's virtual machines as a cloud environment, also because only a few public IP address available in each cloud, I/O buffer nodes are required even in direct connection model.
+
 
 %Reading operation describes operations when issues reading data from another cloud storage, and writing operation describes operation when issues writing data to another cloud storage
 
 %Migration operation occurs when some nodes have to be shutted down in one cloud 
 %all jobs running on these nodes have to be backed up by using snapshot, 
 
-\subsection{Cloud Environment}
-First each cloud is defined as follow:
+\subsection{System Environment}
+First a general system is defined as follow:
 
 %For security consideration and the fact that IPv4 addresses becomes rare,
-All computing nodes are connected by large bandwidth and interconnection network, note network topology maybe different in each cloud, so topology is not specified here, interconnection network performance is measured by throughput.
+All computing nodes are connected by large bandwidth and interconnection network, note network topology maybe different in each system, so topology is not specified here, interconnection network performance is measured by throughput.
 There are a constant number of public IP addresses can be assigned to some computing nodes.
-There is a shared storage for date sharing inside cloud, all computing nodes are connected with shared storage, also the filesystem of shared storage is not specified and performance is measured by throughput.
+There is a shared storage for date sharing inside system, all computing nodes are connected with shared storage, also the filesystem of shared storage is not specified and performance is measured by throughput.
 
 
 \subsection{I/O Bursting Buffer Architecture}
@@ -127,7 +141,7 @@ There is a shared storage for date sharing inside cloud, all computing nodes are
 
 Fig.~\ref{overview} is the overall illustrate of I/O Bursting Buffer Model
 
-There are two clouds here, cloud condition is defined above.
+There are two system here, and conditions are defined above.
 
 Arrows stand for network connection.
 Orange arrows are innerconnection networks inside cloud, although two clouds used the same color for innerconnection networks, bandwidth can be different, also the topolopies are not specified and can be different in each cloud.
