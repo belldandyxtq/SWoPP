@@ -95,7 +95,7 @@ will be shown in section 5, and finally, conclusion and related work will be see
 	\label{point to point connection AMAZON}
 \end{figure} 
 As we know, throughput gap between innerconnection network and Internet is extremely large.
-Fig.~\ref{throughput TSUBAME} shows I/O throughput between TSUBAME V queue nodes and TSBUAME Lustre file system, we can see that the aggreate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in [].
+Fig.~\ref{throughput TSUBAME} shows I/O throughput between TSUBAME V queue nodes and TSBUAME Lustre file system, it is a innerconnection throughput inside TSUBAME supercomputer, we can see that the aggreate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in [].
 On the other hand, Fig.~\ref{throughput AMAZON to TSUBAME Lustre} shows I/O throughput between AMAZON EC2 m3.medium nodes, which have moderate network performance, and TSUBAME Lustre file system, the aggreate throughput is only 100-140 MB/s, about 40-80 times smaller than throughput inside TSUBAME.
 %From Fig.~\ref{throughput TSUBAME} and Fig.~\ref{throughput AMAZON to TSUBAME Lustre} we can see that the I/O throughput of innerconnection inside supercomputer is quit larger than that from AMAZON.
 If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of I/O low throughput,for a data sensitive application, it will be devastating, also according to AMAZON's pay-as-you-go policy, longer execution time means more cost.
@@ -107,11 +107,12 @@ Since we can achieve a high innerconnection throughput inside a system (HPC syst
 %3
 \section{I/O Bursting Buffer Overview}
 
-\begin
+%\begin
 
 An overview of I/O burst buffer architecture and two kinds of connection: direct connection and I/O bursting buffer are described in this section.
-The main idea is we use some of computing nodes as a I/O buffer nodes in each system, I/O data will first buffered in these I/O buffer nodes, and then transferred to storage in another system, 
-Two kinds of buffer are used in our I/O burst buffer architecture, the first one is in client computing node, first buffer user I/O in the same node, another one is in all I/O buffer nodes in the same system
+The main idea is we use some of computing nodes as a I/O buffer nodes in each system, I/O data will be buffered in the same 
+%the same computing nodes and then these I/O buffer nodes, after that data will be  transferred to storage in another system.
+Two kinds of buffer are used in our I/O burst buffer architecture, the first one is in client computing node, first buffer user I/O in the same node, another one is in all I/O buffer nodes in the same system,
 %Although our goal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we consider about federating virtual machine nodes which running on supercomputer physical nodes with public cloud.
 %Since public clouds also run virtual machine on physical nodes, in the follow section, we treat the set of supercomputer's virtual machines as a cloud environment, also because only a few public IP address available in each cloud, I/O buffer nodes are required even in direct connection model.
 
@@ -305,7 +306,7 @@ Since there are some condition that some supercomputer nodes must be shutted dow
 \section{Evaluation}
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=8cm]{ThroughputAMAZONTSUBAME}
+	%\includegraphics[width=8cm]{ThroughputAMAZONTSUBAME}
 	\caption{Throughput between AMAZON and TSUBAME}
 	\label{Throughput between AMAZON and TSUBAME}
 \end{figure}
