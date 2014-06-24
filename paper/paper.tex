@@ -3,6 +3,8 @@
 \usepackage{amsmath}
 \usepackage{verbatim}
 
+\bibliographystyle{ipsjunsrt-e.bst}
+
 \begin{document}
 \title{Towards Cloud Bursting for Extreme Scale Supercomputers}
 
@@ -41,13 +43,13 @@ Although supercomputer can offer a high computational cpacity, there are some si
 Another problem is the power problem in summer, in order to reduce power comsumation, some nodes will be forced to be shutted down, reducing numbers of nodes will make the first problem more serous.
 
 One solution is federating supercomputer with a public cloud, moving parts of job and computation to public cloud when there are not enough computing nodes available for user's request, which is known as cloud bursting.
-Although cloud bursting is used by several companies and already have some sophisticated solution, since there are a significant performance gap between supercomputer nodes and cloud nodes, there will still be several problems when we try to ferderate a supercomputer with a public cloud.
+Although cloud bursting is used by several companies and already have some sophisticated solutions\cite{Eucalyptus,stratos,Seagull}, since there are a significant performance gap between supercomputer nodes and cloud nodes, there will still be several problems when we try to ferderate a supercomputer with a public cloud, and there are several studies on .
 The biggest problem will be data transfer throughput between two environment, supercomputers usual deal with Gigabyte or even Petabyte input and output of data, low I/O throughput will suffer supercomputer user. This paper focuses on methodology of increasing throughput when we do federation.
 
 In order to increase data transfer throughput, we propose a I/O bursting buffer architecture that uses several nodes in each cloud as a I/O nodes to achieve high throughput concurrent data transferring, and a I/O bursting buffer model that uses to switch between I/O bursting buffer mode and direct connect mode.
-This I/O bursting buffer architecture can be mainly used two situation, first in data I/O, the other one will be when there are some nodes need to migrate from a cloud to another cloud with snapshot, snapshots can be transferred without be stored to shared storage.
-Since, I/O bursting buffer needs three times data transfer, sometimes direct transfer will achieve a higher throughput, I/O bursting buffer model using a evaluation throughput using I/O bursting buffer and without I/O bursting buffer to determine I/O bursting buffer mode or direct connection mode.
-Also, public cloud usually charges for nodes usage, using I/O bursting buffer may reduce the computation time, but I/O nodes will be charged for money, we also provide a cost-based model, this model evaluate total cost with and without I/O nodes.
+%This I/O bursting buffer architecture can be mainly used two situation, first in data I/O, the other one will be when there are some nodes need to migrate from a cloud to another cloud with snapshot, snapshots can be transferred without be stored to shared storage.
+%Since, I/O bursting buffer needs three times data transfer, sometimes direct transfer will achieve a higher throughput, I/O bursting buffer model using a evaluation throughput using I/O bursting buffer and without I/O bursting buffer to determine I/O bursting buffer mode or direct connection mode.
+Also, public cloud usually charges for nodes usage, using I/O bursting buffer may reduce the computation time, but I/O nodes will be charged for money, we also provide a cost-based model, to reduce the overall cost.
 
 Our contribution can be summary as following:
 \begin{itemize}
@@ -77,7 +79,7 @@ will be shown in section 5, and finally, conclusion and related work will be see
 %Data shown in this section is taken from AMAZON EC2 m3.medium nodes, which have 3.75GiB memory and Moderate Network Performance and TSUBAME 2.5 V queue, which uses VM.
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7cm]{point_to_point_lab}
+	\includegraphics[width=6cm]{point_to_point_lab}
 	%\includegraphics{}
 	\caption{I/O Throughput to Lustre inside TSUBAME direct mount}
 	\label{throughput TSUBAME}
@@ -85,7 +87,7 @@ will be shown in section 5, and finally, conclusion and related work will be see
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7cm]{point_to_point_lab}
+	\includegraphics[width=6cm]{point_to_point_lab}
 	%\includegraphics{}
 	\caption{I/O Throughput from AMAZON EC2 to file system inside our lab using sshfs}
 	\label{throughput AMAZON to MATSULAB}
@@ -93,7 +95,7 @@ will be shown in section 5, and finally, conclusion and related work will be see
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7cm]{point_to_point_lab}
+	\includegraphics[width=6cm]{point_to_point_AMAZON}
 	%\includegraphics{}
 	\caption{point to point connection inside AMAZON}
 	\label{point to point connection AMAZON}
@@ -101,21 +103,27 @@ will be shown in section 5, and finally, conclusion and related work will be see
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7cm]{point_to_point_lab}
+	\includegraphics[width=6cm]{point_to_point_lab}
 	\caption{point to point connection throughput between AMAZON and our lab}
 	\label{point to point connection LAB}
 \end{figure}
 
 As we know, throughput gap between innerconnection network and Internet is extremely large, also numbers of I/O nodes will affect I/O performance.
-Fig.~\ref{throughput TSUBAME} shows I/O throughput between TSUBAME V queue nodes, which run on VM on several shared machines and TSBUAME Lustre file system, it is a innerconnection throughput inside TSUBAME supercomputer, we can see that I/O throughput growing as numbers of nodes growing, and the aggreate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in [].
-On the other hand, Fig.~\ref{throughput AMAZON to MATSULAB} shows I/O throughput between AMAZON EC2 m3.medium nodes, which have moderate network performance, and a file system machine inside our lab, which has about 1GBit/s Internet access, since TSUBAME Lustre can not be mountted outside of TSUBAME because of security problem, we use a file system inside our lab instead of TSUBAME Lustre file system, we can see that the I/O throughput also grows as number of nodes grows but the aggreate throughput is only 100-140 MB/s, about 40-80 times smaller than throughput inside TSUBAME.
+We use Iperf\cite{iperf}, which was developed by NLANR/DAST as a modern alternative for measuring TCP and UDP bandwidth performance, and IOR\cite{IOR}, which is widely used for benchmarking parallel file systems using POSIX, MPIIO, or HDF5 interfaces.
+
+Fig.~\ref{throughput TSUBAME} shows I/O throughput between TSUBAME V queue nodes, which run on VM on several shared machines and TSBUAME Lustre file system, which is mounted by using lustre client, it is a innerconnection throughput inside TSUBAME supercomputer, we can see that I/O throughput growing as numbers of nodes growing, and the aggreate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in \cite{checkpointing}.
+On the other hand, Fig.~\ref{throughput AMAZON to MATSULAB} shows I/O throughput between AMAZON EC2 m3.medium nodes, which have moderate network performance, and a file system machine inside our lab, which has about 1GBit/s Internet access.
+Since TSUBAME Lustre can not be accessed outside of TSUBAME because of security problem, instead of TSUBAME Lustre file system, we used a file server inside our lab, which has 1GBit/s internet bandwidth, also because of security problem, we used sshfs\cite{sshfs},which is a filesystem client based on SSH File Transfer Protocol, to mount this file system from AMAZON.
+We can see that the I/O throughput also grows as number of nodes grows but the aggreate throughput is only 100-140 MB/s, about 40-80 times smaller than throughput inside TSUBAME.
 %From Fig.~\ref{throughput TSUBAME} and Fig.~\ref{throughput AMAZON to TSUBAME Lustre} we can see that the I/O throughput of innerconnection inside supercomputer is quit larger than that from AMAZON.
 %Also, if we compare the one nodes I/O throughput, 
-If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of I/O low throughput,for a data sensitive application, it will be devastating, also according to AMAZON's pay-as-you-go policy, longer execution time means more cost.
+If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of I/O low throughput,for a data sensitive application, it will be devastating, also according to AMAZON's pay-as-you-go policy\cite{AMAZON_AWS}, longer execution time means more cost.
 
 %But when we compare Fig.~\ref{point to point connection TSUBAME} with FIg.~\ref{point to point connection AMAZON}, the innerconnection throughput 
-However, if we consider innerconnection throughput, as shown in Fig.\ref{point to point connection AMAZON}, although each node can achieve only 1GB/s, the influence between nodes is extremely small, and it shows a strong scalability.
+However, if we consider innerconnection throughput, as shown in Fig.\ref{point to point connection AMAZON}, although each node can achieve only 1GB/s, the influence between nodes is extremely small, figure shows a perfect linar line also a strong scalability.
 Since we can achieve a high innerconnection throughput inside a system (HPC system, public cloud), we consider use some nodes as a buffer nodes, using a buffer queue to buffer I/O data and achieve a high throughput.
+
+Although there are some studies about workflow optimization and  balance\cite{Workload}, Since data transfer rate is extremely low in Internet compared with innerconnection network and data size processed is extremely large, user do not want to settle their nodes across two systems, so in this model, we just consider the situation that all nodes used for the same job are settled in the same system.
 
 %3
 \section{I/O Bursting Buffer Overview}
@@ -127,7 +135,6 @@ As we mentioned in the previous section, our model takes advantage of high throu
 The main idea is that some of computing nodes serve as a I/O buffer nodes in each system, I/O data will first be buffered in buffer queue in the same system, and then be tranferred to final storage system.
 %the same computing nodes and then these I/O buffer nodes, after that data will be  transferred to storage in another system.
 Two kinds of buffer are used in our I/O burst buffer architecture, the first one is in client computing node, first buffer user I/O in the same node, another one is in I/O buffer nodes.
-Since data transfer rate is extremely low in Internet compared to innerconnection network, user do not want to ,in this model, we just consider the situation that all nodes used for the same job are settled in the same system.
 %Although our goal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we consider about federating virtual machine nodes which running on supercomputer physical nodes with public cloud.
 %Since public clouds also run virtual machine on physical nodes, in the follow section, we treat the set of supercomputer's virtual machines as a cloud environment, also because only a few public IP address available in each cloud, I/O buffer nodes are required even in direct connection model.
 
@@ -151,14 +158,14 @@ First a general system used in following sections is defined as follow:
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7cm]{IOserver}
+	\includegraphics[width=6cm]{IOserver}
 	\caption{I/O server and buffer queue}
 	\label{I/O server}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7cm]{overview}
+	\includegraphics[width=6cm]{overview}
 	\caption{overall illustrate of I/O Burst Buffer Architecture}
 	\label{overview}
 \end{figure}
@@ -180,6 +187,7 @@ If data is not in buffer queue, then a read operation described below will be ex
 
 
 Fig.~\ref{overview} shows a overall illustrate of I/O burst buffer architecture:
+
 Consider there are two systems, named system 1 and system 2, and we assume that 
 %Arrows stand for network connection.
 %Orange arrows are innerconnection networks inside cloud, although two clouds used the same color for innerconnection networks, bandwidth can be different, also the topolopies are not specified and can be different in each cloud.
@@ -195,36 +203,43 @@ Consider there are two systems, named system 1 and system 2, and we assume that
 %Since there is a big gap between cloud inside data transferring and accross two clouds in throughput, our goal is to fill the gap. 
 
 %For convenience, in the following section we assume data is stored in Cloud 1's shared storage, and computing nodes in Cloud 2 are used for computation. 
-
-\subsubsection{One-side Buffer}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=7cm]{read_and_write}
-	\caption{read and write operation}
-	\label{read and write}
-\end{figure}
-
-As Fig.~\ref{read and write} shows, one-side buffer is a connection between I/O buffer nodes in system 2 and storage in system 1 directly.
-When computing nodes issue a read request, data firstly be splitted into number of I/O buffer nodes in cloud 2 pieces and assign one I/O buffer node one piece, then I/O buffer nodes start reading assigned data concurrently in order to fully utilize Internet bandwidth.
-After reading finished, I/O buffer nodes send data to each computing node Simultaneously, there data will be restructure by using protocol described below.
-
-Like reading, when computing nodes start to output data, first data will be buffered inside that nodes.
-After output finished, data will be splitted into number of I/O buffer nodes in cloud 2 pieces, and assign one I/O node one piece, then data will be sent to all I/O buffer nodes concurrently.
-When I/O buffer nodes received data, then they writing data back to storage in cloud 1.
-
-\subsubsection{Two-side Buffer}
-
-\subsubsection{Buffer Queue Write Back}
+\subsection{Buffer Queue Write Back}
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[width=7cm]{buffer_queue}
+	\includegraphics[width=6cm]{buffer_queue}
 	\caption{buffer queue}
 	\label{buffer queue}
 \end{figure}
 
 in this subsection, we introduce operation of buffer queue
+
+\subsection{Read and Write}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=6cm]{read_and_write}
+	\caption{read and write operation}
+	\label{read and write}
+\end{figure}
+
+In this section we describe operations when file is not in I/O buffer nodes or file needs to be write back to storage in another system.
+We propose two kindes of model: one-side buffer and two-side buffer.
+
+\subsubsection{One-side Buffer}
+
+As Fig.~\ref{read and write} blue arrow shows, one-side buffer is a connection between I/O buffer nodes in system 2 and storage in system 1 directly.
+When I/O nodes need to write data back to storage in system 1, since data is already spread among I/O nodes, a parallel write can be achieve to fully utilize the Internet bandwidth.
+
+%data firstly be splitted into number of I/O buffer nodes in cloud 2 pieces and assign one I/O buffer node one piece, then I/O buffer nodes start reading assigned data concurrently in order to fully utilize Internet bandwidth.
+%After reading finished, I/O buffer nodes send data to each computing node Simultaneously, there data will be restructure by using protocol described below.
+
+%Like reading, when computing nodes start to output data, first data will be buffered inside that nodes.
+%After output finished, data will be splitted into number of I/O buffer nodes in cloud 2 pieces, and assign one I/O node one piece, then data will be sent to all I/O buffer nodes concurrently.
+%When I/O buffer nodes received data, then they writing data back to storage in cloud 1.
+
+\subsubsection{Two-side Buffer}
+
 
 %I/O bursting buffer model may be used when throughput of direct connection between I/O buffer nodes and storage in different cloud is smaller then throughput between I/O buffer nodes, it is possible when storage is consist of few nodes, and direct connection will be 1-N connection, on the contrary, connection between I/O buffer nodes is N-N connection, has larger parallelism.
 
@@ -351,4 +366,5 @@ In this section, a simulation will be introduced based on data taking from sever
 
 \section{Conclusion and Related Work}
 
+\bibliography{reference}
 \end{document}
