@@ -1,0 +1,23 @@
+\begin{abstract}
+%Parallel programming are used to reduce execution time of complex problems, also fully utilizing computing resource of Supercomputers.
+
+%supercomputers usually consist of a large number of nodes, provide high parallelism for multi-user.
+%However computing nodes in supercomputers will not meet the request in some situation, such as some nodes have to be shut down to reduce electric consumption in summer or just several serial applications occupy nodes making others must wait.
+%large serial applications will occupy computation nodes for a long time and causes some other applications which use numerous nodes to wait in a running queue, leads a low utilization of computing resource.
+%One solution is running virtual machine on 
+%In this paper, a comparison was made between a Public Cloud (AMAZON EC2) and a Supercomputer (TSUBAME) on Ethernet Performance and leading a 
+%In order to satisfy these temporary request peak, we are trying to federate supercomputers with public cloud, which is known as cloud bursting.
+%Although some sophisticated solutions are available, still we are facing several challenges, since there are a significant performance gap between supercomputers and public cloud.
+%In this paper, we focus on I/O throughput between these two environments, we propose a I/O Bursting Buffer Model to burst I/O throughput between supercomputer and public cloud and reduce the cost for extra time usage caused by low I/O throughput.
+%we also provide a simulation based on several benchmarks on TSUBAME supercomputer and AMAZON EC2 public cloud.
+%The result shows our model can provide a stable and high I/O throughput as well as a low cost in most cases.
+
+Extreme-scale HPC systems, which consist of a large number of compute nodes, can provide high computational capacity for multiple users. However, computing nodes in the systems occasionally can not meet the demand due to bursty job requests in short period times. In order to accommodate the bursty requests, we consider federating HPC systems with public clouds, which is known as cloud bursting. Although the federated systems can acquire virtually infinite computational power with cloud bursting, the QoS may not be guaranteed due to a significant performance gap between HPC systems and public clouds. The most critical problem is a gap in I/O performance. In this paper, we propose an I/O acceleration technique using distributed cloud bursting buffers. We also create the I/O performance model to explore the effectiveness. Our model-based simulations, which target the TSUBAME supercomputer for an HPC system, and AMAZON EC2 for a public cloud, show that the distributed cloud busting buffer can improve I/O throughput while reducing the cost. 
+
+\end{abstract}
+
+\begin{keyword}
+Supercomputer, Cloud, I/O Bursting Buffer Model
+\end{keyword}
+
+\maketitle
