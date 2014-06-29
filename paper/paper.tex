@@ -407,6 +407,20 @@ In this case, jobs running on public cloud have to be moved back to original sys
 \begin{figure}[tb]
 	\centering
 	%\includegraphics[width=6cm]{}
+	\caption{throughput comparison with and without compress}
+	\label{compress}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	%\includegraphics
+	\caption{cache hit and miss throughput comparison}
+	\label{cache hit}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	%\includegraphics[width=6cm]{}
 	\caption{throughput comparison with and without I/O burst buffer}
 	\label{throughput}
 \end{figure}
@@ -430,20 +444,6 @@ In this case, jobs running on public cloud have to be moved back to original sys
 	\includegraphics[width=6cm]{compress_time}
 	\caption{compress time on TSUBAME V queue and AMAZON EC2}
 	\label{compress time}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	%\includegraphics[width=6cm]{}
-	\caption{throughput comparison with and without compress}
-	\label{compress}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	%\includegraphics
-	\caption{cache hit and miss throughput comparison}
-	\label{cache hit}
 \end{figure}
 
 %\begin{figure}[tb]
@@ -474,6 +474,7 @@ throughput=-Ax^2+Bx+C~~ A,B>0\\
 \end{equation}
 we use following equations to determine $A,B,C$
 \begin{equation}
+	\label{throughput equation}
 \begin{cases}
 	-A+B+C=throughput_{one}\\\nonumber
 	\frac{B}{2A}=n_{max}\\\nonumber
@@ -481,13 +482,17 @@ we use following equations to determine $A,B,C$
 \end{cases}
 \end{equation}
 
-First, we compare throughput with and without I/O buffer nodes.
-Since it is hard for one node to fully utilize Internet and Ethernet bandwidth, according to Fig.~\ref{throughput AMAZON to OURLAB}, we assume that one node can achieve half of maximum bandwidth.
-We can see from Fig.~\ref{throughput}, when interconnection throughput is larger than Internet throughput, our I/O buffer can achieve a higher throughput.
+Since it is hard for one node to fully utilize Internet and Ethernet bandwidth, according to Fig.~\ref{throughput AMAZON to OURLAB}, we assume that one node can achieve 80\% of maximum bandwidth, and by using I/O burst buffer, can achieve 100\% of maximum bandwidth of both Ethernet and Internet, here Ethernet throughput refers to Ethernet connection throughput in public cloud.
 
-Then, we compare overall cost by using I/O burst buffer, 
+First we consider the throughput comparison between direct connection and cache hit cases by using I/O burst buffer.
+If file is buffered in I/O buffer nodes, computing nodes can read it through Ethernet, Fig.~\ref{cache hit}, shows the comparison, we can see that when Ethernet throughput larger than Internet throughput, our solution can achieve a higher I/O throughput, here we assume that Ethernet throuhput can be lower than Internet throughput, but from Fig.~\ref{point to point connection AMAZON}, Fig.~\ref{throughput TSUBAME}, Ethernet usually is faster than Internet, and by using our solution can achieve a high throughput.
 
-we compare throughput with and without compression, Fig.~\ref{compress rate} shows compress and Fig.~\ref{compress time} shows compress and decompress time on TSUBAME V queue and AMAZON EC2 with a different compress level by using zlib\cite{zlib}.
+Then, we compare throughput with and without I/O buffer nodes.
+We can see from Fig.~\ref{throughput},although our solution can be limited by both Internet and Ethernet throughput, our I/O burst buffer can fully utilize both Internet and Ethernet. Like previous comparison, when Ethernet is faster than Internet, our solution can achieve a throughput burst even file is not stored in buffer queue in I/O burst buffer like (read data from storage).
+
+After that, we compare overall cost when use two-side buffer and one-side buffer, since execution time, in our case, I/O time and I/O throughput will affect cost, for Internet and Ethernet throughput, we use \ref{throughput equation}.
+From Fig.~\ref{cost}, 
+Finally, we compare throughput with and without compression, Fig.~\ref{compress rate} shows compress and Fig.~\ref{compress time} shows compress and decompress time on TSUBAME V queue and AMAZON EC2 with a different compress level by using zlib\cite{zlib}.
 We can achieve a high compress rate, but the throughput is low, up to 160MB/s, depends on compress level, it is hard to find a compress library can compress data faster and smaller, so the compress throughput may become a bottleneck.
 On the other hand, the compress rate is high, since the buffer size is limited, if we can make data smaller, it means we can increase the buffer hit rate, Fig.~\ref{cache hit} shows a throughput comparison between cache miss and hit.
 
