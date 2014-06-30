@@ -1,11 +1,13 @@
 \section{I/O Bursting Buffer Overview}
+% Why I/O server in client nodes
 \label{sec:burst_buffer}
 
 %\begin
 
 An overview of I/O burst buffer architecture and two kinds of connection: direct connection and I/O bursting buffer are described in this section.
 As we mentioned in the previous section, our model takes advantage of high throughput inside a system, and use buffer queue system in order to increase throughput between two systems.
-The main idea is that some of computing nodes serve as a I/O buffer nodes in each system, I/O data will first be buffered in buffer queue in the same system, and then be transferred to final storage system.
+The main idea is that some of computing nodes serve as a I/O buffer nodes in each system, I/O data will first be buffered in buffer queue in the same system, and then be transferred to final storage system
+\kento{how about read ?}.
 %the same computing nodes and then these I/O buffer nodes, after that data will be  transferred to storage in another system.
 Two kinds of buffer are used in our I/O burst buffer architecture, the first one is in client computing node, first buffer user I/O in the same node, another one is in I/O buffer nodes.
 %Although our goal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we consider about federating virtual machine nodes which running on supercomputer physical nodes with public cloud.
@@ -17,9 +19,8 @@ Two kinds of buffer are used in our I/O burst buffer architecture, the first one
 %Migration operation occurs when some nodes have to be shut down in one cloud 
 %all jobs running on these nodes have to be backed up by using snapshot, 
 
-\subsection{System Environment}
-First a general system used in following sections is defined as follow:
-
+\subsection{Assumptions}
+First, we make several assumptions for the federated environments as follows.
 %For security consideration and the fact that IPv4 addresses becomes rare,
 \begin{itemize}
 	\item All computing nodes are connected by large bandwidth and interconnection network, note network topology maybe different in each system, so topology is not specified here, interconnection network performance is measured by throughput.
