@@ -5,9 +5,13 @@
 \usepackage{supertabular}
 \usepackage{flushend}
 \usepackage{latexsym}
+\usepackage{colortbl}
 \bibliographystyle{ipsjunsrt-e.bst}
 
+
 \newcommand{\kento}[1]{{\color{blue} [Kento: {\it #1}]}}
+\definecolor{darkgray}{gray}{0.7}
+\definecolor{lightgray}{gray}{0.9}
 
 \def\Underline{\setbox0\hbox\bgroup\let\\\endUnderline}
 \def\endUnderline{\vphantom{y}\egroup\smash{\underline{\box0}}\\}
@@ -17,7 +21,8 @@
 \input{ot1txtt.fd}
 \makeatother
 \begin{document}
-\title{Towards Cloud Bursting for Extreme Scale Supercomputers}
+\title{Towards Cloud Bursting for Extreme Scale Supercomputers\\
+   (Unrefereed Workshop Manuscript)}
 
 \affiliate{Titech}{Tokyo Institute of Technology, Japan, Tokyo, Meguro, okayama 2-12-1}
 \author{Tianqi Xu}{Titech}
