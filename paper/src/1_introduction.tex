@@ -1,5 +1,5 @@
 \section{Introduction}
-Supercomputers provide an increasing number of scientific applications with  high computational power by a large number of processors, large bandwidth memory and low leatency interconnects.
+Supercomputers provide an increasing number of scientific applications with high computational power by a large number of processors, large bandwidth memory and low leatency interconnects.
 %Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
 Although supercomputers can offer the high computational power, there are several situations where a supercomputer can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until previous job finished although there are 49 nodes remainning available.
@@ -29,10 +29,9 @@ but I/O nodes will be charged for money, we also provide a cost-based model, to 
 
 Our contributions can be summrized as following:
 \begin{itemize}
-	\item An architecture of I/O burst buffer for increasing data transfer throughput between two systems.
-	\item A throughput-based I/O burst buffer model uses to switch between I/O bursting mode and direct connection mode in order to achieve a high data transfer when federating two systems, a cost-based I/O burst buffer model uses to reduce the total cost and a queue model used.
-	%\item 
-	\item Evaluating I/O burst buffer architecture and two models by using data obtained from several benchmarks from TSUBAME supercomputer and AMAZON EC2 public cloud.
+	\item A cloud-based burst buffer for increasing data transfer throughput between two systems;
+	\item A throughput-based I/O burst buffer model, which estimate I/O throughput of systems with I/O burst buffers, and a cost-based I/O burst buffer model, which estimate overall cost give a system configuration;
+        \item Evaluating I/O burst buffer architecture and two models by using data obtained from several benchmarks from TSUBAME supercomputer and AMAZON EC2 public cloud.
 \end{itemize}
 %2
 The remainder of this paper is organized as follow:in section 2, the motivation and background of this study will be introduced, a overview of I/O bursting buffer Architecture including direct connection and I/O bursting buffer will be introduced in section 3, and the model used to switch between two modes will be described in section 4, a simulation result of our model %based on data obtained from several benchmark on TSUBAME V queue and AMAZON EC2 
