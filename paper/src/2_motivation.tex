@@ -2,76 +2,6 @@
 \label{sec:motivation}
 \subsection{Public Cloud}
 \label{sec:public_cloud}
-\kento{Please explain what Public cloud is with example of Amazon EC2. Then, the details which is needed to mention for readers understand the rest of the sections.
-  (1-1) Architecture (VM environment \& datacetners are geographically distributed)
-  (1-2) Explain instance types which is related to this paper. Current draft does not mention any instance types.
-  (1-3) introduce pay-as-you-go model to help readers understand the cost-based model in the modeling section 
-  (1-4) [please add whatever you think it's needed]}
-
-\subsection{Federation between supercomputers and clouds}
-\kento{Please explain (2-1) how we federate supercomputers with clouds. $=>$ Virtualize supercomputer (e.g. TSUBAME V) + VM on clouds. 
-                      (2-2) what the advantages are. $=>$ VMs can provide the same execution environment on both supercomputers and clouds
-                      (2-3) [please add whatever you think it's needed]}
-
-\subsection{Challenges in Federation with clouds}
-\label{sec:problems}
-\kento{In this section, (3-1) First explain I/O problems in federation with clouds based on the cloud architecture explained in the above (1-1) as well as using Fig.1-4. 
-                        (3-2) Then, please briefly clarfy why ``(A) cloud-based burst buffer`` can improve I/O performance without using model. For example, parallel I/O, cacheing .... 
-                              (Remember we knew that cloud-based burst buffer is effective before compareing the performances between w/ and w/o burst buffers by using performance model)
-                        (3-3) Another challenge is a choice of instance types for burst buffer, and understanding the trade-off between I/O perfomrance and the monetary cost. 
-                              In addtion, the choice of instances, the trade-offs are changes depending on given a supercomputer and cloud environments, such as network throughput, PFS performance. 
-                              That's why the ``(B) perfomrance modeling`` is important}
-
-\kento{Then, in the rest of the section, we explain (A) and (B)}
-
-
-\subsection{(Current Section 2)}
-\kento{Please fit the below sentences to the above sections with additional explanations}
-
-\begin{table}[h]
-\caption{\small XXXXX specification}
-\label{tbl:spec}
-\begin{center}
-\begin{tabular}{|c|l|}
-  \hline
-  \cellcolor{lightgray} CPU   & Intel Core i7-3770K CPU (3.50 GHz x 4 cores)\\
-  \hline
-  \cellcolor{lightgray} Memory   & Cetus DDR3-1600 (16 GB)    \\
-  \hline
-  \cellcolor{lightgray} M/B   & GIGABYTE GA-Z77X-UD5H \\
-  \hline
-  \cellcolor{lightgray} SSD          & Crucial m4 CT256M4SSD3 (256GB,
-  mSATA)\\
-  \cellcolor{lightgray}             & (Peak read:500 MB/s, Peak write: 260
-MB/s)
-             \\
-             \hline
-             \cellcolor{lightgray} SATA converter & KOUTECH IO-ASS110 mSATA to 2.5' SATA  \\
-             \cellcolor{lightgray}& Device Converter with Metal Frame \\
-             \hline
-             \cellcolor{lightgray} RAID Card    & Adaptec ASR-7805Q Single\\
-             \hline
-
-\end{tabular}
-\end{center}
-\end{table}
-% vector figures
-% Fig. 4 does not have a frame
-% write machine spec 
-
-%When people analyze large size of data, parallel programme is widely used in order to reduce computation time, especially when using supercomputer.
-%However, it is usually difficult for a non-computer-scientist to write a parallel program, or re-write some existing applications into parallel version.
-%Many serial applications are submitted to Supercomputer and occupy computing nodes for a long time, causing other applications which offer large number of nodes to wait for nodes, and leading a low utilization of computing resource.
-%Consider following situation, there are 50 nodes available when a user submits a serial program using 1 node for 4 hours, after an hour a user try to run a program using 50 nodes, then he can't start his program until the first user finished his job.
-%Such situation happens frequently when thousands and hundreds of users using one system at the same time and leading a low utilization of computing resource.
-%One solution is running several virtual machines on a single physical machine for increasing utilization, which is used in TSUBAME Supercomputer, but sometime it still can't meet the request.
-%For request not always reaches peak, it is not wise to increase nodes just for a temporary request peak.
-%However even using virtual machines computing nodes still can't meet the request of users, for example, power problem will be critical in summer and nearly half of computing nodes have be shut down to reduce electricity consumption in the case of TSUBAME Supercomputer.
-%Facing these problems, one solution will be federate supercomputer with public cloud.
-%By using public cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
-%Of cause, there will be many challenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
-
-%Data shown in this section is taken from AMAZON EC2 m3.medium nodes, which have 3.75GiB memory and Moderate Network Performance and TSUBAME 2.5 V queue, which uses VM.
 \begin{figure}[tb]
 	\centering
 	\includegraphics[width=6cm]{../img/throughput_tsubame}
@@ -100,19 +30,98 @@ MB/s)
 	\label{point to point connection LAB}
 \end{figure}
 
-As we know, throughput gap between interconnection network and Internet is extremely large, also numbers of I/O nodes will affect I/O performance.
-We use Iperf\cite{iperf}, which was developed by NLANR/DAST as a modern alternative for measuring TCP and UDP bandwidth performance, and IOR\cite{IOR}, which is widely used for benchmarking parallel file systems using POSIX, MPIIO, or HDF5 interfaces.
+\begin{table}[h]
+\caption{\small TSUBAME thin node specification}
+\label{tbl:spec}
+\begin{center}
+\begin{tabular}{|c|l|}
+  \hline
+  \cellcolor{lightgray} CPU      & Intel Xeon 2.93GHz CPU (4 cores)*2\\
+  %(Hyperthreading enabled)\\
+  \hline
+  \cellcolor{lightgray} Memory   & 54GB (16 GB)    \\
+  \hline
+  \cellcolor{lightgray} SSD      & 120GB \\
+  \hline
+  \cellcolor{lightgray} GPU	 & NVIDIA Tesla K20X *3\\
+  \hline
+  \cellcolor{lightgray} Network  & QDR InfiniBnd *2 (80Gbps)\\
+  \hline
+\end{tabular}
+\end{center}
+\end{table}
 
-Fig.~\ref{throughput TSUBAME} shows I/O throughput between TSUBAME V queue nodes \kento{Describe node specification in Table I}, which run on VM on several shared machines and TSBUAME Lustre file system, which is mounted by using lustre client, it is a interconnection throughput inside TSUBAME supercomputer, we can see that I/O throughput growing as numbers of nodes growing, and the aggregate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in \cite{checkpointing}.
-On the other hand, Fig.~\ref{throughput AMAZON to OURLAB} shows I/O throughput between AMAZON EC2 m3.medium nodes, which have moderate network performance, and a file system machine inside our lab, which has about 1GBit/s Internet access.
-Since TSUBAME Lustre can not be accessed outside of TSUBAME because of security problem, instead of TSUBAME Lustre file system, we used a file server inside our lab, which has 1GBit/s internet bandwidth, also because of security problem, we used sshfs\cite{sshfs},which is a filesystem client based on SSH File Transfer Protocol, to mount this file system from AMAZON.
-We can see that the I/O throughput also grows as number of nodes grows but the aggregate throughput is only 100-140 MB/s, about 40-80 times smaller than throughput inside TSUBAME.
+\kento{Please explain what Public cloud is with example of Amazon EC2. Then, the details which is needed to mention for readers understand the rest of the sections.
+  (1-1) Architecture (VM environment \& datacetners are geographically distributed)
+  (1-2) Explain instance types which is related to this paper. Current draft does not mention any instance types.
+  (1-3) introduce pay-as-you-go model to help readers understand the cost-based model in the modeling section 
+  (1-4) [please add whatever you think it's needed]}
+Public cloud is one in which the services and infrastructure such as applications and storage are provided off-site over the Internet.
+Among many public cloud, Amazon Elastic Compute Cloud (Amazon EC2) is one of the most famous one, like other public cloud, Amazon EC2 privde VM computing nodes, distributed to several geographic regions.
+Amazon EC2 provide a large amount of instance types optimized to fit different use cases comprise varying combinations of CPU, memory, storage, and networking capacity.
+In this study, we used general purpose m3.xlarge instance which has 4 vCPUs, 15GiB memory, 2*80GB SSD storage and high level Ethernet network condition in Tokyo region, we run Amazon Linux AMI 2014.03.2 (HVM), which is based on Linux 3.10 on these instances.
+About pricing, Amazon use a pay-as-you-go pricing policy, which means you pay only for what you use, there is no minimum fee and you will pay for compute capacity by the hour with no long-term commitments.
+\subsection{Federation between supercomputers and clouds}
+\kento{Please explain (2-1) how we federate supercomputers with clouds. $=>$ Virtualize supercomputer (e.g. TSUBAME V) + VM on clouds. 
+                      (2-2) what the advantages are. $=>$ VMs can provide the same execution environment on both supercomputers and clouds
+                      (2-3) [please add whatever you think it's needed]}
+Since there is a significate performance gap between supercomputer computing nodes and public cloud computing nodes.
+We can not simply federate supercomputers with clouds, in order to get the same execution environment on both supercomputers and clouds, we virtualize supercomputer, e.g. TSUBAME V queue with VM on clouds.
+\subsection{Challenges in Federation with clouds}
+\label{sec:problems}
+\kento{In this section, (3-1) First explain I/O problems in federation with clouds based on the cloud architecture explained in the above (1-1) as well as using Fig.1-4. 
+                        (3-2) Then, please briefly clarfy why ``(A) cloud-based burst buffer`` can improve I/O performance without using model. For example, parallel I/O, cacheing .... 
+                              (Remember we knew that cloud-based burst buffer is effective before compareing the performances between w/ and w/o burst buffers by using performance model)
+                        (3-3) Another challenge is a choice of instance types for burst buffer, and understanding the trade-off between I/O perfomrance and the monetary cost. 
+                              In addtion, the choice of instances, the trade-offs are changes depending on given a supercomputer and cloud environments, such as network throughput, PFS performance. 
+                              That's why the ``(B) perfomrance modeling`` is important}
+Although we virtualize supercomputer and obtain a similiar environment on both supercomputers and clouds, there are still several problems remains, for example, input data of applications running on supercomputer is usually stored in shared storages in the same system and can be read from and wrote to these storages with a extremely high throughput.
+
+We use Iperf\cite{iperf}, which was developed by NLANR/DAST as a modern alternative for measuring TCP and UDP bandwidth performance, and IOR\cite{IOR}, which is widely used for benchmarking parallel file systems using POSIX, MPIIO, or HDF5 interfaces.
+Fig.~\ref{throughput TSUBAME} shows read and write throughput from TSUBAME V queue nodes (VM runing on TSUBAME Thin node, which specification is shown in \tabref{tbl:spec}) and TSBUAME Lustre file system, which is mounted by using lustre client, it is a interconnection throughput inside TSUBAME supercomputer, we can see that I/O throughput growing as numbers of nodes growing, and the aggregate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in \cite{checkpointing}.
+On the other hand, Fig.~\ref{throughput AMAZON to OURLAB} shows I/O throughput between AMAZON EC2 nodes and a file system machine inside our lab, which has about 1GBit/s Internet access.
+Since TSUBAME Lustre can not be accessed outside of TSUBAME because of security problem, instead of TSUBAME Lustre file system, we used a file server inside our lab, which has 1GBit/s internet bandwidth, also because of security problem, we used sshfs\cite{sshfs},which is a filesystem client based on SSH File Transfer Protocol, to mount this file system from Amazon.
+We can see that the I/O throughput also grows as number of nodes grows but the aggregate throughput is only 100-140 MB/s, which is limited by Internet bandwidth, about 40-80 times smaller than throughput inside TSUBAME.
+
+To solve this problem, we propose our cloud-based I/O burst buffer architecture, since usually Internet throuhput is the bottleneck, by using parallel I/O and cacheing file in I/O buffer nodes, we can fully utilize the Internet bandwidth as well as avoid frequently transfering file between two systems, hence achieve a high I/O throughput.
+
+%when we try to move some jobs to public clouds after federation, the data 
+\kento{Then, in the rest of the section, we explain (A) and (B)}
+
+
+\subsection{(Current Section 2)}
+\kento{Please fit the below sentences to the above sections with additional explanations}
+
+% vector figures
+% Fig. 4 does not have a frame
+% write machine spec 
+
+%When people analyze large size of data, parallel programme is widely used in order to reduce computation time, especially when using supercomputer.
+%However, it is usually difficult for a non-computer-scientist to write a parallel program, or re-write some existing applications into parallel version.
+%Many serial applications are submitted to Supercomputer and occupy computing nodes for a long time, causing other applications which offer large number of nodes to wait for nodes, and leading a low utilization of computing resource.
+%Consider following situation, there are 50 nodes available when a user submits a serial program using 1 node for 4 hours, after an hour a user try to run a program using 50 nodes, then he can't start his program until the first user finished his job.
+%Such situation happens frequently when thousands and hundreds of users using one system at the same time and leading a low utilization of computing resource.
+%One solution is running several virtual machines on a single physical machine for increasing utilization, which is used in TSUBAME Supercomputer, but sometime it still can't meet the request.
+%For request not always reaches peak, it is not wise to increase nodes just for a temporary request peak.
+%However even using virtual machines computing nodes still can't meet the request of users, for example, power problem will be critical in summer and nearly half of computing nodes have be shut down to reduce electricity consumption in the case of TSUBAME Supercomputer.
+%Facing these problems, one solution will be federate supercomputer with public cloud.
+%By using public cloud computing nodes just in request peak or when facing with power problem, people can save cost for buying new machines.
+%Of cause, there will be many challenges when Supercomputer federates with public cloud, such as security problems, using public cloud may cause research data opened to public, also connecting with Internet put Supercomputer under threats of hacker's attack.
+
+%Data shown in this section is taken from AMAZON EC2 m3.medium nodes, which have 3.75GiB memory and Moderate Network Performance and TSUBAME 2.5 V queue, which uses VM.
+
+
+%Fig.~\ref{throughput TSUBAME} shows I/O throughput between TSUBAME V queue nodes \kento{Describe node specification in Table I}(VM runing on TSUBAME Thin node, which specification is shown in \tabref{tbl:spec}), which run on VM on several shared machines and TSBUAME Lustre file system, which is mounted by using lustre client, it is a interconnection throughput inside TSUBAME supercomputer, we can see that I/O throughput growing as numbers of nodes growing, and the aggregate read and write throughput reach 6-8GB/s with 64 nodes, the same result also can be seen in \cite{checkpointing}.
+%On the other hand, Fig.~\ref{throughput AMAZON to OURLAB} shows I/O throughput between AMAZON EC2 nodes and a file system machine inside our lab, which has about 1GBit/s Internet access.
 %From Fig.~\ref{throughput TSUBAME} and Fig.~\ref{throughput AMAZON to TSUBAME Lustre} we can see that the I/O throughput of interconnection inside supercomputer is quit larger than that from AMAZON.
 %Also, if we compare the one nodes I/O throughput, 
-Also if we compare Fig.~\ref{point to point connection LAB} with Fig.~\ref{throughput AMAZON to OURLAB}, the maximum throughput \kento{??}
-If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of I/O low throughput,for a data sensitive application, it will be devastating, also according to AMAZON's pay-as-you-go policy\cite{AMAZON_AWS}, longer execution time means more cost.
+%Also if we compare Fig.~\ref{point to point connection LAB} with Fig.~\ref{throughput AMAZON to OURLAB}, the maximum throughput \kento{??}
+%If we move some jobs to AMAZON EC2 with input data stored in TSUBAME Lustre, the execution time will increase because of I/O low throughput,for a data sensitive application, it will be devastating, also according to AMAZON's pay-as-you-go policy\cite{AMAZON_AWS}, longer execution time means more cost.
 
 %But when we compare Fig.~\ref{point to point connection TSUBAME} with FIg.~\ref{point to point connection AMAZON}, the interconnection throughput 
+
+using I/O burst buffer requires addtional nodes running on public cloud and means more cost, also like Amazon EC2, public cloud usually provides various instance types with different specification, using which instance type also will affect both cost and performance.
+We provide a cost-based model to determine 
 However, if we consider interconnection throughput, as shown in Fig.\ref{point to point connection AMAZON}, although each node can achieve only 1GB/s, the influence between nodes is extremely small, figure shows a perfect linear line also a strong scalability.
 Since we can achieve a high interconnection throughput inside a system (HPC system, public cloud), we consider use some nodes as a buffer nodes, using a buffer queue to buffer I/O data and achieve a high throughput.
 
