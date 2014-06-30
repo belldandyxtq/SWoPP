@@ -6,8 +6,8 @@ compile:
 	latex ${PAPER}.tex
 	bibtex ${PAPER}.aux
 	latex ${PAPER}.tex
-	pdflatex ${PAPER}.tex
-
+	latex ${PAPER}.tex
+	dvipdfmx ${PAPER}.dvi
 
 clean:
-	rm paper.dvi paper.bbl paper.aux paper.pdf paper.log
+	rm paper.dvi paper.bbl paper.aux paper.pdf paper.log paper.blg
