@@ -1,22 +1,33 @@
 \section{Introduction}
-An increasing number of scientific applications are now running on Supercomputer for high performance computing nodes, large bandwidth and low latency interconnection environment, also a great number of processors for high scalability.
+Supercomputers provide an increasing number of scientific applications with  high computational power by a large number of processors, large bandwidth memory and low leatency interconnects.
 %Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
-
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
-Although supercomputer can offer a high computational cpacity, there are some situations HPC system can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until previous job finished although there are 49 nodes remainning available.
+Although supercomputers can offer the high computational power, there are several situations where a supercomputer can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until previous job finished although there are 49 nodes remainning available.
 %high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
 Another problem is the power problem in summer, in order to reduce power consumption, some nodes will be forced to be shut down (peak shift in TSUBAME\cite{TSUBAME}), reducing numbers of nodes will make the first problem more serous.
 
-One solution is federating supercomputer with a public cloud, moving parts of job and computation to public cloud when there are not enough computing nodes available for user's request, which is known as cloud bursting.
-Although cloud bursting is used by several companies and already have some sophisticated solutions\cite{Eucalyptus,stratos,Seagull}, since there are a significant performance gap between supercomputer nodes and cloud nodes, there will still be several problems when we try to federate a supercomputer with a public cloud, and there are several studies on cloud burst about cost\cite{Seagull}, execution time\cite{time_and_cost}, etc..
-The biggest problem will be data transfer throughput between two environment, supercomputers usual deal with Gigabyte or even Petabyte input and output of data, low I/O throughput will suffer supercomputer user. This paper focuses on methodology of increasing throughput when we do federation.
+One solution is federating a supercomputer with a public cloud,
+and moving a part of jobs to the public cloud when there are not enough
+computing nodes available for user's requests, which is known as \emph{cloud bursting}.
+Although cloud bursting is technically feasible~\cite{Eucalyptus,stratos,Seagull}, 
+and is employed by several private companies, 
+there is a significant performance gap between supercomputers and clouds, 
+there will still be several problems when we try to federate a supercomputer with a public cloud, 
+and there are several studies on cloud burst about cost\cite{Seagull}, execution time\cite{time_and_cost}, etc..
+The biggest problem will be data transfer throughput between two environment, 
+supercomputers usual deal with Gigabyte or even Petabyte input and output of data, 
+low I/O throughput will suffer supercomputer user. This paper focuses on methodology 
+of increasing throughput when we do federation.
 
-In order to increase data transfer throughput, we propose a I/O burst buffer architecture that uses several nodes in each system as a I/O nodes to achieve high throughput concurrent data transferring, and a I/O burst buffer model that uses to switch between I/O burst buffer mode and direct connect mode.
+In this paper, we propose an I/O burst buffer architecture that uses multiple nodes in each system as an I/O nodes 
+to achieve high throughput concurrent data transferring, and an I/O burst buffer model 
+that uses to switch between I/O burst buffer mode and direct connect mode.
 %This I/O bursting buffer architecture can be mainly used two situation, first in data I/O, the other one will be when there are some nodes need to migrate from a cloud to another cloud with snapshot, snapshots can be transferred without be stored to shared storage.
 %Since, I/O bursting buffer needs three times data transfer, sometimes direct transfer will achieve a higher throughput, I/O bursting buffer model using a evaluation throughput using I/O bursting buffer and without I/O bursting buffer to determine I/O bursting buffer mode or direct connection mode.
-Also, public cloud usually charges for nodes usage, using I/O bursting buffer may reduce the computation time, but I/O nodes will be charged for money, we also provide a cost-based model, to reduce the overall cost.
+Also, public cloud usually charges for nodes usage, I/O bursting buffers may reduce the computation time, 
+but I/O nodes will be charged for money, we also provide a cost-based model, to reduce the overall cost.
 
-Our contribution can be summary as following:
+Our contributions can be summrized as following:
 \begin{itemize}
 	\item An architecture of I/O burst buffer for increasing data transfer throughput between two systems.
 	\item A throughput-based I/O burst buffer model uses to switch between I/O bursting mode and direct connection mode in order to achieve a high data transfer when federating two systems, a cost-based I/O burst buffer model uses to reduce the total cost and a queue model used.
