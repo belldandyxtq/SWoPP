@@ -8,8 +8,10 @@
 %\end{figure}
 
 Throughput-based Model, Cost-based Model and buffer queue write back model will be described in this section.
-Throughput-based Model compare one-side buffer throughput with two-side buffer, cost-based model compare one-side buffer cost with two-side buffer, and buffer queue write back model. 
-We make definitions shows in \tabref{definition} in order to describe our model:
+As we explained in the previous section, two-side buffer model is better than one-side buffer model, in the following section, we will use two-side buffer model as our read from and write back model in I/O burst buffer.
+
+Throughput-based Model compares throughput with and without I/O burst buffer, cost-based model compare cost with and without I/O burst buffer, and buffer queue write back model shows the situation that I/O buffer queue will be full. 
+We make definitions shows in \tabref{definition} in order to describe our model.
 \begin{table}[tb]
 	\caption{Definition of parameters}
 	\label{definition}
@@ -18,66 +20,69 @@ We make definitions shows in \tabref{definition} in order to describe our model:
 	$c_1,c_2$&Numbers of computing nodes in system 1 and system 2\\\hline
 	$n_1, n_2$&Numbers of I/O buffer nodes in system 1 and system 2.\\\hline
 	$m_1,m_2$&Available memory size for each I/O node in system 1 and 2, also the maximum buffer size will be $n_1\times m_1$ and $n_2\times m_2$\\\hline
-	$D_1(n_2),D_2(n_2)$&Throughput when $n_2$($n_1$) I/O nodes in system 1 (system 2) connect to storage in the other system directly, here we assume only I/O nodes in each system have Internet connection.\\\hline
-	$I(n_1,n_2)$& 	Internet throughput using $n_1,n_2$ I/O buffer nodes respectively, Since overall Internet throughput is affected by number of nodes involved in connection.\\\hline
+	$D_1(n_2),D_2(n_2)$&Throughput when $n_2$($n_1$) I/O nodes in system 1 (system 2) connect to storage in the other system directly, here we assume I/O nodes and computing nodes in each system have the same Internet connection speed.\\\hline% have Internet connection.\\\hline
+	$I(n_1,n_2)$& 	Internet throughput using $n_1,n_2$ nodes respectively, since overall Internet throughput is affected by number of nodes involved in connection.\\\hline
 	$E_1(n_1), E_2(n_2)$&Interconnection network throughput in system 1 and 2, although interconnection throughput is also affected by numbers of I/O nodes and computing nodes, numbers of users will running application on different number of computing nodes.\\\hline
 	%, it is difficult to compute each throughput, so here we use $E_1(n_1)$ to refer to limitation of maximum throughput of interconnection network in system 1 with $n_1$ I/O nodes, likely ,$E_2(n_2)$ is limitation of maximum throughput of interconnection network in system 2 with $n_2$ I/O nodes.
 	$M_1(n_1),M_2(n_2)$& Throughput of connection between storage and $n_1$ I/O nodes in system 1 and storage and $n_2$ I/O nodes in system 2.\\\hline
-	$C_1\_Money(T)$,$C_2\_Money(T)$& Cost for standard node in system 1 and 2 for $T$ time usage\\\hline
+	$C_i\_Money(T)$& Cost for standard node in system $i$ for $T$ time usage\\\hline
 	%and cost for node in system 1 is $C_2\_Money(T)$ for $T$ time usage, and since I/O nodes may use a better network, 
-	$C_1\_High\_Money(T)$,$C_2\_High\_Money(T)$& cost I/O nodes in system 1 and 2 for $T$ time usage, since I/O nodes may use a better network condition, we assume it will cost more than normal nodes.\\\hline
+	$C_i\_High\_Money(T)$ &I/O nodes in system $i$ for $T$ time usage, since I/O nodes may use a better network condition, we assume it will cost more than normal nodes.\\\hline
 \end{tabular}
 \end{table}
 
 \subsection{Throughput-based Model}
 %There are many facts will affect throughput of Internet, so here a moniter is used to evaluate throughput between 
-In the case of one-side buffer, there are two data transfers: computation nodes to I/O buffer nodes in system 2, I/O buffer nodes in system 2 to storage in system 1, so throughput will be:
+In the case of direct I/O, computing nodes connect to storage in another system directly, there is only one data transfer, so throughput will be:%there are two data transfers: computation nodes to I/O buffer nodes in system 2, I/O buffer nodes in system 2 to storage in system 1, so throughput will be:
 \begin{equation}
-	\text{throughput}_{\text{one-side}}=\min\{D_1(n_2),E_2(n_2)\} \label{throughput1}
+	\text{thr}_{\text{direct}}=D_1(c_2) \label{throughput1}
 \end{equation}
 
-In the case of two-side buffer, there are three data transfers: computation nodes to I/O buffer nodes in system 2, I/O buffer nodes in system 2 to I/O buffer nodes in system 1, I/O buffer nodes in system 1 to storage in system 1, throughput will be:
-
-\begin{equation}
-	\text{throughput}_{\text{two-side}}=\min\{M_1(n_1),I(n_1,n_2),E_2(n_2)\} \label{throughput2}
-\end{equation}
+When using I/O burst buffer, there will be three data transfers: computation nodes to I/O buffer nodes in system 2, I/O buffer nodes in system 2 to I/O buffer nodes in system 1, I/O buffer nodes in system 1 to storage in system 1, throughput will be:
+\begin{eqnarray}
+	\text{thr}_{\text{I/O buffer}}=\\\begin{cases}
+		E_2(n_2) &\text{buffer queue available}\\ 
+	\min\{M_1(n_1),I(n_1,n_2),E_2(n_2)\} &\text{buffer queue full}
+	\end{cases} \label{throughput2}
+\end{eqnarray}
 
 In this throughput-based model, these two throughputs are evaluated, and a switch is based on these two values:
 
 \begin{equation}
 	\begin{cases}
-		\text{throughput}_{\text{one-side}} \geq \text{throughput}_{\text{two-side}} & \text{use one-side}\\
-		\text{throughput}_{\text{one-side}} < \text{throughput}_{\text{two-side}} & \text{use two-side}
+		\text{thr}_{\text{direct}} \geq \text{thr}_{\text{I/O buffer}} & \text{use direct I/O}\\
+		\text{thr}_{\text{direct}} < \text{thr}_{\text{I/O buffer}} & \text{use I/O burst buffer}
 	\end{cases}
 \end{equation}
 
 \subsection{Cost-based Model}
-In the case of cost-based model, we consider
+In the case of cost-based model, we consider the overall cost for using direct I/O and using I/O burst buffer. Although using I/O burst buffer will cost for I/O nodes, higher throughput can reduce execution time and also overall cost.
 using \ref{throughput1},and \ref{throughput2} total time for transferring unit size of data can be compute as:
 
 \begin{equation}
 	\begin{cases}
-		T_1=\frac{1}{\min\{D_1(n_2),E_2(n_2)\}} & \text{one-side}\\
-		T_2=\frac{1}{\min\{M_1(n_1),I(n_1,n_2),E_2(n_2)\}} &\text{two-side}
+		T_1=\frac{1}{D_1(c_2)} & \text{direct}\\
+		T_2=\frac{1}{\min\{M_1(n_1),I(n_1,n_2),E_2(n_2)\}} &\text{buffer queue available}\\
+		T_3=\frac{1}{E_2(n_2)} &\text{buffer queue full}
 	\end{cases}
 \end{equation}
 
-here we compute cost by using $T_1,T_2$:
+here we compute cost by using $T_1,T_2,T_3$:
 \begin{equation}
-	\text{cost}_\text{one-side}=c_2\times C_2\_Money(T_1)+n_2\times C_2\_High\_Money(T_1)
+	\text{cost}_\text{direct}=c_2\times C_2\_Money(T_1)+n_2\times C_2\_High\_Money(T_1)
 \end{equation}
 \begin{align}
-	\text{cost}_\text{two-side}&=c_2\times C_2\_Money(T_2)\\\nonumber 
-				     &+n_1\times C_1\_High\_Money(T_2)\\ \nonumber
-				     &+n_2\times C_2\_High\_Money(T_2)
+	\text{cost}_\text{I/O buffer}=\\\begin{cases}
+				c_2\times C_2\_Money(T_2)+n_1\times C_1\_High\_Money(T_2)+n_2\times C_2\_High\_Money(T_2)&\text{buffer queue available}\\
+				c_2\times C_2\_Money(T_3)+n_1\times C_1\_High\_Money(T_3)+n_2\times C_2\_High\_Money(T_3) &\text{buffer queue full}
+\end{cases}
 \end{align}
 
-In this throughput-based model, these two throughput are evaluated, and a switch is based on these two values:
-
+In this cost-based model, these two cost are evaluated, and a switch is based on these two values:
 \begin{equation}
 	\begin{cases}
-		\text{cost}_{\text{one-side}} \geq \text{cost}_{\text{two-side}} & \text{use one-side}\\
-		\text{cost}_{\text{one-side}} < \text{cost}_{\text{two-side}} & \text{use two-side}
+		\text{cost}_{\text{direct}} \geq \text{cost}_{\text{I/O buffer}} & \text{use direct I/O}\\
+		\text{cost}_{\text{direct}} < \text{cost}_{\text{I/O buffer}} & \text{use I/O burst buffer}
 	\end{cases}
 \end{equation}
 
