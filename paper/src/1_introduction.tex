@@ -1,4 +1,5 @@
 \section{Introduction}
+\label{sec:introduction}
 Supercomputers provide an increasing number of scientific applications with high computational power by a large number of processors, large bandwidth memory and low leatency interconnects.
 %Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
@@ -26,13 +27,17 @@ that uses to switch between I/O burst buffer mode and direct connect mode.
 %Since, I/O bursting buffer needs three times data transfer, sometimes direct transfer will achieve a higher throughput, I/O bursting buffer model using a evaluation throughput using I/O bursting buffer and without I/O bursting buffer to determine I/O bursting buffer mode or direct connection mode.
 Also, public cloud usually charges for nodes usage, I/O bursting buffers may reduce the computation time, 
 but I/O nodes will be charged for money, we also provide a cost-based model, to reduce the overall cost.
-
+\kento{please summirize the evaluation resutls here.}
 Our contributions can be summrized as following:
 \begin{itemize}
 	\item A cloud-based burst buffer for increasing data transfer throughput between two systems;
 	\item A throughput-based I/O burst buffer model, which estimate I/O throughput of systems with I/O burst buffers, and a cost-based I/O burst buffer model, which estimate overall cost give a system configuration;
-        \item Evaluating I/O burst buffer architecture and two models by using data obtained from several benchmarks from TSUBAME supercomputer and AMAZON EC2 public cloud.
+        \item Evaluation of the I/O burst buffer architecture based the performance models by using real data obtained from several benchmarks from the TSUBAME supercomputer and AMAZON EC2.
 \end{itemize}
 %2
-The remainder of this paper is organized as follow:in section 2, the motivation and background of this study will be introduced, a overview of I/O bursting buffer Architecture including direct connection and I/O bursting buffer will be introduced in section 3, and the model used to switch between two modes will be described in section 4, a simulation result of our model %based on data obtained from several benchmark on TSUBAME V queue and AMAZON EC2 
-will be shown in section 5, and finally, conclusion and related work will be seen in section 6.
+The remainder of this paper is organized as follow. 
+In Section \ref{sec:motivation}, we clarify the motivation and the background.
+We introduce an overview of the I/O bursting buffer architecture in Section \ref{sec:burst_buffer}, 
+and show the performance models to evaluate the I/O bursting buffer architecture in Section \ref{sec:model}. 
+In Section \ref{sec:evaluation}, we present our experimental results based of our perfomrance models. %based on data obtained from several benchmark on TSUBAME V queue and AMAZON EC2 
+Finally, we detail related work in Section \ref{sec:related_work}, and conclusion in Section \ref{sec:conclusion}.
