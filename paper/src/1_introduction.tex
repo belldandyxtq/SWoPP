@@ -3,8 +3,9 @@
 Supercomputers provide an increasing number of scientific applications with high computational power by a large number of processors, large bandwidth memory and low leatency interconnects.
 %Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
-Although supercomputers can offer the high computational power, there are several situations where a supercomputer can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until previous job finished although there are 49 nodes remainning available.
+%Although supercomputers can offer the high computational power, there are several situations where a supercomputer can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until previous job finished although there are 49 nodes remainning available.
 %high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
+Although supercomputers can offer high capablity of computation, it is not unlimited, for some request peak, computation resource in supercomputer can not meet the needs of user, or simply user requesst more resource than supercomputers have, also some jobs require a exclusive usage for computing nodes, like grand challenge, will occpy a great amount of computation resource, leads inadequate of reourse for other job.
 Another problem is the power problem in summer, in order to reduce power consumption, some nodes will be forced to be shut down (peak shift in TSUBAME\cite{TSUBAME}), reducing numbers of nodes will make the first problem more serous.
 
 One solution is federating a supercomputer with a public cloud,
@@ -16,7 +17,7 @@ there is a significant performance gap between supercomputers and clouds,
 there will still be several problems when we try to federate a supercomputer with a public cloud, 
 and there are several studies on cloud burst about cost\cite{Seagull}, execution time\cite{time_and_cost}, etc..
 The biggest problem will be data transfer throughput between two environment, 
-supercomputers usual deal with Gigabyte or even Petabyte input and output of data, 
+since we want to move some jobs from supercomputer to public cloud, I/O data need to transfer between these two system, supercomputers usual deal with Gigabyte or even Petabyte input and output of data, 
 low I/O throughput will suffer supercomputer user. This paper focuses on methodology 
 of increasing throughput when we do federation.
 
