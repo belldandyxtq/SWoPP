@@ -1,4 +1,5 @@
 \section{I/O Burst Buffer Model}
+\label{sec:model}
 
 %\begin{figure}[tb]
 %	\centering
@@ -40,7 +41,7 @@ In the case of direct I/O, computing nodes connect to storage in another system 
 
 When using I/O burst buffer, there will be three data transfers: computation nodes to I/O buffer nodes in system 2, I/O buffer nodes in system 2 to I/O buffer nodes in system 1, I/O buffer nodes in system 1 to storage in system 1, throughput will be:
 \begin{eqnarray}
-	\text{thr}_{\text{I/O buffer}}=\\\begin{cases}
+	\text{thr}_{\text{I/O buffer}}=\begin{cases}
 		E_2(n_2) &\text{buffer queue available}\\ 
 	\min\{M_1(n_1),I(n_1,n_2),E_2(n_2)\} &\text{buffer queue full}
 	\end{cases} \label{throughput2}
