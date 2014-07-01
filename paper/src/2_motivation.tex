@@ -71,8 +71,8 @@ By using VMs, we can run the same image on both supercomputer and public cloud a
 \subsection{Challenges in Federation with clouds}
 \label{sec:problems}
 \kento{In this section, (3-1) First explain I/O problems in federation with clouds based on the cloud architecture explained in the above (1-1) as well as using Fig.1-4. 
-                        (3-2) Then, please briefly clarfy why ``(A) cloud-based burst buffer`` can improve I/O performance without using model. For example, parallel I/O, cacheing .... 
-                              (Remember we knew that cloud-based burst buffer is effective before compareing the performances between w/ and w/o burst buffers by using performance model)
+                        (3-2) Then, please briefly clarfy why ``(A) I/O burst buffer`` can improve I/O performance without using model. For example, parallel I/O, cacheing .... 
+                              (Remember we knew that I/O burst buffer is effective before compareing the performances between w/ and w/o burst buffers by using performance model)
                         (3-3) Another challenge is a choice of instance types for burst buffer, and understanding the trade-off between I/O perfomrance and the monetary cost. 
                               In addtion, the choice of instances, the trade-offs are changes depending on given a supercomputer and cloud environments, such as network throughput, PFS performance. 
                               That's why the ``(B) perfomrance modeling`` is important}
@@ -84,7 +84,7 @@ However, Fig.~\ref{throughput AMAZON to OURLAB} shows I/O throughput between AMA
 We can see that the I/O throughput also grows as number of nodes grows but the aggregate throughput is only 100-140 MB/s, which is limited by Internet bandwidth, about 40-80 times smaller than throughput inside TSUBAME.
 For data-sensitive application, low I/O throughput is devastating, especially for application running on supercomputers, furthermore, lower I/O throughput leads a longer execution time, according to Amazon pay-as-you-go policy, longer execution time means more cost.
 
-To solve this problem, we propose our cloud-based I/O burst buffer architecture, since usually Internet throuhput is the bottleneck, by using parallel I/O and cacheing file in I/O buffer nodes, we can fully utilize the Internet bandwidth as well as avoid frequently transfering file between two systems, hence achieve a high I/O throughput.
+To solve this problem, we propose our I/O burst buffer architecture, since usually Internet throuhput is the bottleneck, by using parallel I/O and cacheing file in I/O buffer nodes, we can fully utilize the Internet bandwidth as well as avoid frequently transfering file between two systems, hence achieve a high I/O throughput.
 Althought using I/O buffer can increase I/O throughput, reduce the execution time and cost, I/O buffer nodes will be charged for usage, also a better instance will cost more than a normal one, there will be a trade-off between I/O performance and monetary cost.
 Moreover, the instance choice, number of I/O nodes depends on supercomputer and pulic cloud environment, in our following section, we will provide a performance modele
 
