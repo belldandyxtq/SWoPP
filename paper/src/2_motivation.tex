@@ -84,15 +84,19 @@ However, Fig.~\ref{throughput AMAZON to OURLAB} shows I/O throughput between AMA
 We can see that the I/O throughput also grows as number of nodes grows but the aggregate throughput is only 100-140 MB/s, which is limited by Internet bandwidth, about 40-80 times smaller than throughput inside TSUBAME.
 For data-sensitive application, low I/O throughput is devastating, especially for application running on supercomputers, furthermore, lower I/O throughput leads a longer execution time, according to Amazon pay-as-you-go policy, longer execution time means more cost.
 
+However, when we look at Ethernet throughput inside Amazon as Fig.\ref{point to point connection AMAZON} shows, although we only show the result up to 8 pairs of nodes, each node achieved only 135MB/s (1GBit/s), the influence between nodes is extremely small, figure shows a perfect linear line also a strong scalability.
+since when we running the benchmark, many other users were also running applications on Amazon, so we can assume that highest throughput 1GB/s (8Gbit/s) shown in Fig.~\ref{point to point connection AMAZON} is not the maximum bandwidth of Ethernet in Amazon EC2 .
+Comparing Fig.~\ref{point to point connection AMAZON} with Fig.~\ref{throughput AMAZON to OURLAB} and Fig.~\ref{point to point connection LAB}, Ethernet throughput is much higher than Internet, it shows that our solution, by using I/O buffer nodes can achieve a higher Ethernet throughput than Internet.
+
 To solve this problem, we propose our I/O burst buffer architecture, since usually Internet throuhput is the bottleneck, by using parallel I/O and cacheing file in I/O buffer nodes, we can fully utilize the Internet bandwidth as well as avoid frequently transfering file between two systems, hence achieve a high I/O throughput.
-Althought using I/O buffer can increase I/O throughput, reduce the execution time and cost, I/O buffer nodes will be charged for usage, also a better instance will cost more than a normal one, there will be a trade-off between I/O performance and monetary cost.
-Moreover, the instance choice, number of I/O nodes depends on supercomputer and pulic cloud environment, in our following section, we will provide a performance modele
+Althought using I/O buffer can increase I/O throughput, reduce the execution time and cost, I/O buffer nodes will be charged for usage, also a better instance will cost more than a normal one, there will be a trade-off between I/O performance and monetary cost, we will introduce a throughput-based model and a cost-based model to predict the throughput and overall cost.
+%Moreover, the instance choice, number of I/O nodes depends on supercomputer and pulic cloud environment, in our following section, we will provide a performance modele
 
 %when we try to move some jobs to public clouds after federation, the data 
 \kento{Then, in the rest of the section, we explain (A) and (B)}
 
 
-\subsection{(Current Section 2)}
+%\subsection{(Current Section 2)}
 \kento{Please fit the below sentences to the above sections with additional explanations}
 
 % vector figures
@@ -125,9 +129,6 @@ Moreover, the instance choice, number of I/O nodes depends on supercomputer and 
 
 %using I/O burst buffer requires addtional nodes running on public cloud and means more cost, also like Amazon EC2, public cloud usually provides various instance types with different specification, using which instance type also will affect both cost and performance.
 %We provide a cost-based model to determine 
-Fig.\ref{point to point connection AMAZON} shows the Ethernet throughput inside Amazon EC2 taken by using Iperf, although we only show the result up to 8 pairs of nodes, each node achieved only 135MB/s (1GBit/s), the influence between nodes is extremely small, figure shows a perfect linear line also a strong scalability.
-since when we running the benchmark, many other users were also running applications on Amazon, so we can assume that highest throughput 1GB/s (8Gbit/s) shown in Fig.~\ref{point to point connection AMAZON} is not the maximum bandwidth of Ethernet in Amazon EC2.
-Comparing Fig.~\ref{point to point connection AMAZON} with Fig.~\ref{throughput AMAZON to OURLAB} and Fig.~\ref{point to point connection LAB}, Ethernet throughput is much higher than Internet, it shows that our solution, by using I/O buffer nodes can achieve a higher Ethernet throughput than Internet.
 %Since we can achieve a high interconnection throughput inside a system (HPC system, public cloud), we consider use some nodes as a buffer nodes, using a buffer queue to buffer I/O data and achieve a high throughput.
 
-Although there are some studies about workflow optimization and  balance\cite{Workload}, Since data transfer rate is extremely low in Internet compared with interconnection network and data size processed is extremely large, user do not want to settle their nodes across two systems, so in this model, we just consider the situation that all nodes used for the same job are allocated in the same system.
+%Although there are some studies about workflow optimization and  balance\cite{Workload}, Since data transfer rate is extremely low in Internet compared with interconnection network and data size processed is extremely large, user do not want to settle their nodes across two systems, so in this model, we just consider the situation that all nodes used for the same job are allocated in the same system.
