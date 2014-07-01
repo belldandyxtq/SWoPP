@@ -35,10 +35,21 @@
 %	\caption{TSUBAME Lustre workload}
 %	\label{Lustre workload}
 %\end{figure}
-
-In this section, a simulation will be introduced based on data taking from several benchmarks on both TSUBAME V queue and AMAZON EC2 public cloud Tokyo region.%, using
-Consider we have up to 20 m3.xlarge computing nodes need to transfer data between two systems, we compare I/O throughput and overall cost between direct I/O and I/O burst buffer with different cache hit rate, here cache hit rate means the percentage of data in total I/O is buffered in buffer queue or the percentage of data can write to buffer queue before queue becomes full.
-since when we use I/O burst buffer, read and write throughput are the same, both are equal to throughput between computing nodes and I/O nodes,  we use this throughput value for I/O throughput when use I/O burst buffer..
+To evaluate how much federated systems with I/O burst buffers can improve I/O performance and the cost, 
+we conduct several simulations based on preliminary performance data taken from several 
+benchmarks on both our in-house cluster and Amazon EC2 in a Tokyo region in Section \ref{sec:motivation}.%, using
+In the simulations, we assume that computing nodes running on one system read or write files on storage of the other system with the same I/O throghputs for both read and write operations.
+We also assume an instance type of both the computing nodes and I/O burst buffer nodes is m3.xlarge provided by Amazon EC2.
+We compare I/O throughputs and overall costs of a system using direct I/O with a system using I/O burst buffer by scaling out up to 20 computing nodes
+under different cahch hit rate.
+For read operations, the cache hit rate means percentage of data, which is read from buffer queues, to total read size. 
+For write operations, the cache hit rate means percentage of data, which is  written to buffer queues before queue becomes full, to total write size.
+%Consider we have up to 20 m3.xlarge computing nodes need to transfer data between two systems, 
+%Since read and write throughput are the same when using caches on I/O burst buffers, read and write throughputs are equal to throghputs  between computing nodes and I/O nodes,  we use this throughput value for I/O throughput when use I/O burst buffer..
+If read and write are completed via caches on I/O burst buffers
+without accessing to remote storage, read and write throghputs become 
+identical to throughputs between a compute node and I/O burst buffer nodes. 
+%Thus, we use these throughputs for I/O throghputs
 %m3.medium instance, which has a moderate Ethernet condition and one vcpu with 3.75GiB memory, and
 %m3.xlarge instance, which has a high Ethernet condition and 8 vCPUs with 30GiB memory, run Amazon Linux AMI 2014.03.2(HVM) ( Fig.~\ref{throughput TSUBAME}, Fig.~\ref{throughput AMAZON to OURLAB}. Fig.~\ref{point to point connection AMAZON}, Fig.~\ref{point to point connection LAB} ).
 %According to these data and definition described above, we use values defined below.
@@ -69,9 +80,14 @@ since when we use I/O burst buffer, read and write throughput are the same, both
 
 %Since it is hard for one node to fully utilize Internet and Ethernet bandwidth, according to Fig.~\ref{throughput AMAZON to OURLAB}, we assume that one node can achieve 80\% of maximum bandwidth, and by using I/O burst buffer, can achieve 100\% of maximum bandwidth of both Ethernet and Internet, here Ethernet throughput refers to Ethernet connection throughput in public cloud.
 
-First we compare the I/O throughput between direct connection and I/O burst buffer with different cache hit rate on TSUBAME and Amazon EC2.
-In this simulation we assume that both I/O buffer nodes and computing nodes use m3.xlarge instance and Amazon Linux AMI, and the number of I/O buffer nodes is equal to number of computing nodes in order to achieve a maximum Ethernet throughput.
-In practice, I/O buffer nodes may have a better Ethernet condition than computing nodes, but there also will be many users running their application on large amount of computing nodes, so there can be several computing nodes reading data from or writing data to one I/O nodes, Ethernet bandwidth also can be fully utilized. 
+First we compare I/O throughputs of direct connection with the throughput of  I/O burst buffer under different cache hit rates assuming that TSUBAME is federated with Amazon EC2.
+%In this simulation, we assume that both I/O buffer nodes and computing nodes use m3.xlarge instance and Amazon Linux AMI, and the number of I/O buffer nodes is equal to number of computing nodes in order to achieve a maximum Ethernet throughput.
+In this simulation, the number of I/O buffer nodes is equal to the number of computing nodes. This configuration can achieve a maximum I/O throughputs.
+%In practice, I/O buffer nodes may have a better Ethernet condition than computing nodes, but there also will be many users running their application on large amount of computing nodes, so there can be several computing nodes reading data from or writing data to one I/O nodes, Ethernet bandwidth also can be fully utilized. 
+In practice, an I/O buffer node may have higher network throghput condition than computing nodes, 
+but there also will be many users running their application on large amount of computing nodes, 
+so there can be several computing nodes reading data from or writing data to one I/O nodes, 
+Ethernet bandwidth also can be fully utilized. 
 
 Fig.~\ref{throughput comparison} and Fig.~\ref{throughput cache rate} shows the throughput comparison with and without I/O burst buffer.
 For direct I/O, each computing nodes will read from and write data to storage directly and concurrently, when number of nodes is small, throughput increases as number of nodes increses, but after throughput reach the Internet bandwidth( 120MB/s when number of nodes equals to 10 in our case), throughput becomes stable, means Internet bandwidth is fully utilized, and since that I/O is limited by Internet bandwidth.
