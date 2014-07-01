@@ -28,6 +28,7 @@ the low I/O throughput suffers supercomputer users. Thus, improving I/O throughp
 In this paper, we propose cloud-based burst buffers. The cloud-based burst buffers consists of I/O dedicated staging nodes, which cache hot files in the buffers, and enables asynchronous write back for improving both read and write operations to remote file systems.
 We also model the cloud-based burst buffers to optimize  configurations of the cloud-based burst buffers according to dynamically changing environments
 \kento{Do you think this sentence is resonable to describe your model ?}.
+According to our simulation, we can achieve a 4-20 times higher throughput (depends on data locality and other factors) by using 20 I/O buffer nodes on Amazon EC2 environment, as well sa reduce 2-12 times of cost.
 \kento{please summirize the evaluation resutls here.}
 %  architecture that uses multiple nodes in each system as an I/O nodes 
 %to improve I/O throughput concurrent data transferring, and an I/O burst buffer model 
