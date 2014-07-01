@@ -1,4 +1,4 @@
-\section{I/O Bursting Buffer Overview}
+\section{I/O Burst Buffer Overview}
 % Why I/O server in client nodes
 \label{sec:burst_buffer}
 
@@ -7,9 +7,9 @@
 An overview of I/O burst buffer architecture and two kinds of buffer model: one-side buffer and two-side buffer are described in this section.
 As we mentioned in the previous section, our model takes advantage of high throughput inside a system, and use buffer queue system in order to increase throughput between two systems.
 Two kinds of buffer are used in our I/O burst buffer architecture, the first one is in client computing node, first buffer user I/O in the same node, another one is in I/O buffer nodes.
-The main idea is that some of computing nodes serve as a I/O buffer nodes in each system, for write I/O data, if buffer queue in I/O buffer nodes is not full, data can first be buffered in buffer queue in the same system, and then be transferred to final storage system, and for reading, if that file is stored in the buffer queue, computing nodes can read from I/O nodes through Ethernet.
-In other cases (buffer queue is full when issue a write requst or requsted file is not stored in buffer queue when issue a read request we call it cache miss), an read from or write back operation described below will be executed. 
-\kento{how about read ?}.
+The main idea is that some of computing nodes serve as a I/O buffer nodes in each system, for write I/O data, if buffer queue in I/O buffer nodes is not full, data can first be buffered in buffer queue in the same system, and then be transferred to final storage system, and for reading, if that file is stored in the buffer queue, computing nodes can read from I/O nodes through interconnection network.
+In other cases (buffer queue is full when issue a write request or requested file is not stored in buffer queue when issue a read request we call it cache miss), an read from or write back operation described below will be executed. 
+%\kento{how about read ?}.
 %the same computing nodes and then these I/O buffer nodes, after that data will be  transferred to storage in another system.
 %Although our goal here is to federate supercomputer with public cloud, since there are a great performance gap between normal supercomputer nodes and public cloud nodes and problem described above, here we consider about federating virtual machine nodes which running on supercomputer physical nodes with public cloud.
 %Since public clouds also run virtual machine on physical nodes, in the follow section, we treat the set of supercomputer's virtual machines as a cloud environment, also because only a few public IP address available in each cloud, I/O buffer nodes are required even in direct connection model.
@@ -46,19 +46,19 @@ First, we make several assumptions for the federated environments as follows.
 \end{figure}
 
 %Fig.~\ref{overview} and Fig.~\ref{I/O server} are the overall illustrate of I/O Bursting Buffer:
-There are two kinds of nodes in our I/O burst buffer architecture: \emph{computing nodes} and \emph{I/O burst buffer nodes}, computing nodes run user's application and I/O burst buffer nodes.
-Among I/O burst buffer nodes, there is a master nodes, which maintain a global buffer queue and a namespace, controll buffer read and write, and manage I/O buffer nodes, buffer data is distributed to all I/O buffer nodes in order to enable concurrent read and write.
+There are two kinds of nodes in our I/O burst buffer architecture: \emph{computing nodes} and \emph{I/O burst nodes}, computing nodes run user's application and I/O burst nodes.
+Among I/O burst nodes, there is a master nodes, which maintain a global buffer queue and a namespace, control buffer read and write, and manage I/O buffer nodes, buffer data is distributed to all I/O buffer nodes in order to enable concurrent read and write.
 
-Fig.~\ref{I/O server} is a illustrate of I/O server inside client nodes and buffer queue in I/O burst buffer nodes.
-In each computing node, there is a I/O server, which is a filesystem client used to buffer I/O data, communicate with I/O buffer nodes, including send I/O requset and send or receive I/O data.
+Fig.~\ref{I/O server} is a illustrate of I/O server inside client nodes and buffer queue in I/O burst nodes.
+In each computing node, there is a I/O server, which is a filesystem client used to buffer I/O data, communicate with I/O buffer nodes, including send I/O request and send or receive I/O data.
 
-When a user application issue a write request, I/O data will be buffered in that node by I/O server, when user close the file, call flush function or I/O data size exceed I/O server buffer size, I/O server will try to transfer I/O data to buffer queue in I/O burst buffer, if buffer queue in not full, I/O data will be sent to I/O burst buffer via Ethernet and can be seen among computing nodes in the same system after that.
-However if buffer queue is full, I/O server will block user application and wait until buffer queue is ready to recieve new I/O data, causing a low I/O throughput.
+When a user application issue a write request, I/O data will be buffered in that node by I/O server, when user close the file, call flush function or I/O data size exceed I/O server buffer size, I/O server will try to transfer I/O data to buffer queue in I/O burst buffer, if buffer queue in not full, I/O data will be sent to I/O burst buffer via interconnection network and can be seen among computing nodes in the same system after that.
+However if buffer queue is full, I/O server will block user application and wait until buffer queue is ready to receieve new I/O data, causing a low I/O throughput.
 
 %When I/O server is notified that buffer queue is ready,first, I/O server sends the size of I/O data to master I/O burst buffer node, master node return a list of several I/O buffer nodes, then I/O server split I/O data into pieces, and sends each pieces to a I/O buffer node, after data transfer finished, that file will be added to buffer queue and namespace, and this file can be seen by all computing nodes, since we assume that all nodes used by the same job are allocated in the same system, so data consistency can be guaranteed since that.
 %Buffer queue operation including data write back and operation when queue is full will be described in following section.
 
-Similiarly when user issue a read request, there are two conditions: required file is buffered in buffer queue in I/O burst buffer, or file is stored only in storage in another system.
+Similarly when user issue a read request, there are two conditions: required file is buffered in buffer queue in I/O burst buffer, or file is stored only in storage in another system.
 In the first cases, file can be transferred to computing nodes from buffer queue directly, and can achieve a high throughput.
 If data is not in buffer queue, then a read operation described below will be executed, since data must be transferred from storage in another system, in this case, throughput will depend on Internet condition and it is hard to achieve a high throughput.
 
@@ -93,7 +93,8 @@ Fig.~\ref{overview} shows a overall illustrate of I/O burst buffer architecture.
 	\label{read and write}
 \end{figure}
 
-In this section we describe read and write operations when cache miss happens.%file is not in I/O buffer nodes or file needs to be write back to storage in another system.
+In this section we describe read and write operations when cache miss happens.
+%file is not in I/O buffer nodes or file needs to be write back to storage in another system.
 We propose two kinds of model: one-side buffer and two-side buffer.
 
 \subsubsection{One-side Buffer}
@@ -130,10 +131,10 @@ Compared with one-side buffer, %two-side buffer required one more data transfer 
 two-side buffer require both systems allocate I/O buffer nodes, if node usage is charge in both system, total cost may be larger than one-side buffer.
 
 %the bottleneck is still Internet throughput, since interconnection is far faster than Internet.
-However since two-side buffer does not read data from or write data to storage directly, it means we can compress data before transfer it, though it will take some time to compress and decompress data, when the Internet throughput is extremely low, compress and decompress time will be far smaller than tranferring time, and compress data can make more data buffered in buffer queue.
+However since two-side buffer does not read data from or write data to storage directly, it means we can compress data before transfer it, though it will take some time to compress and decompress data, when the Internet throughput is extremely low, compress and decompress time will be far smaller than transferring time, and compress data can make more data buffered in buffer queue.
 Also, unlike one-side buffer, two-side buffer do not require storage to be opened to Internet, only required several I/O nodes have access to Internet.
 
-For these reasons, in the following section, we will use two-side buffer model as our read from and write back model in I/O burst buffer.
+For these reasons, in the following section, we use two-side buffer model as our read from and write back model in I/O burst buffer.
 %I/O bursting buffer model may be used when throughput of direct connection between I/O buffer nodes and storage in different cloud is smaller then throughput between I/O buffer nodes, it is possible when storage is consist of few nodes, and direct connection will be 1-N connection, on the contrary, connection between I/O buffer nodes is N-N connection, has larger parallelism.
 
 %When computing nodes issue read request, first we check whether the file has been cached in I/O buffer nodes in cloud 1, if not, File will be splitted into the same number of I/O buffer nodes in cloud 1, and each I/O buffer node will be assigned a piece of split, then all I/O buffer nodes start reading assigned piece of data from shared storage simultaneously to fully utilize the bandwidth.% I/O buffer nodes use a main index to refer to the data position in global data.
