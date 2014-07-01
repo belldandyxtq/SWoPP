@@ -1,2 +1,2 @@
 AMAZON EC2 => Amazon EC2
-I/O burst buffer, I/O bursting buffer => cloud-based burst buffer (CBB)
+I/O burst buffer, I/O bursting buffer => cloud-based burst buffer (CB3?) or cloud burst buffer (CBB) ?
