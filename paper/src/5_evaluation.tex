@@ -3,44 +3,30 @@
 
 \begin{figure}[tb]
 	\centering
-	%\includegraphics[width=6cm]{}
-	\caption{throughput comparison with and without compress}
-	\label{compress}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	%\includegraphics
-	\caption{cache hit and miss throughput comparison}
-	\label{cache hit}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	%\includegraphics[width=6cm]{}
+	\includegraphics[width=6cm]{../img/throughput_comparison}
 	\caption{throughput comparison with and without I/O burst buffer}
-	\label{throughput}
+	\label{throughput comparison}
 \end{figure}
 
 \begin{figure}[tb]
 	\centering
-	%\includegraphics[width=6cm]{}
-	\caption{cost comparison with and without I/O burst buffer}
+	\includegraphics[width=6cm]{../img/cache_hit_rate_throughput}
+	\caption{throughput comparison between each cache hit rate}
+	\label{throughput cache rate}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=6cm]{../img/maximum_throughput}
+	\caption{maximum avaliable throughput}
+	\label{maximum throughput}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=6cm]{../img/cost}
+	\caption{cost comparison}
 	\label{cost}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=6cm]{../img/compress_rate}
-	\caption{compress rate}
-	\label{compress rate}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=6cm]{../img/compress_time}
-	\caption{compress time on TSUBAME V queue and AMAZON EC2}
-	\label{compress time}
 \end{figure}
 
 %\begin{figure}[tb]
@@ -50,9 +36,10 @@
 %	\label{Lustre workload}
 %\end{figure}
 
-In this section, a simulation will be introduced based on data taking from several benchmarks on both TSUBAME V queue and AMAZON EC2 public cloud Tokyo region, using
+In this section, a simulation will be introduced based on data taking from several benchmarks on both TSUBAME V queue and AMAZON EC2 public cloud Tokyo region%, using
+Consider we have up to 20 m3.xlarge computing nodes need to transfer data between two systems, since when we use I/O burst buffer, read and write throughput are the same, both is equal to throughput between computing nodes and I/O nodes, for using I/O burst buffer, we use this throughput value.
 %m3.medium instance, which has a moderate Ethernet condition and one vcpu with 3.75GiB memory, and
-m3.xlarge instance, which has a high Ethernet condition and 8 vCPUs with 30GiB memory, run Amazon Linux AMI 2014.03.2(HVM) ( Fig.~\ref{throughput TSUBAME}, Fig.~\ref{throughput AMAZON to OURLAB}. Fig.~\ref{point to point connection AMAZON}, Fig.~\ref{point to point connection LAB} ).
+%m3.xlarge instance, which has a high Ethernet condition and 8 vCPUs with 30GiB memory, run Amazon Linux AMI 2014.03.2(HVM) ( Fig.~\ref{throughput TSUBAME}, Fig.~\ref{throughput AMAZON to OURLAB}. Fig.~\ref{point to point connection AMAZON}, Fig.~\ref{point to point connection LAB} ).
 %According to these data and definition described above, we use values defined below.
 
 %\begin{center}
@@ -62,35 +49,54 @@ m3.xlarge instance, which has a high Ethernet condition and 8 vCPUs with 30GiB m
 	
 %\end{tabular}
 %\end{center}
-For throughput between two systems and inside system, from benchmark data, it shows it is hard to achieve a high throughput with only one nodes, and also there is a limit on maximum throughput between two systems and inside system.
-Although incresing nodes can increse throughput before reach the maximum, throughput achieved by each nodes decrease because of conflict.
-For these reason, we use following formular for throughput between two systems and inside system.
+%For throughput between two systems and inside system, from benchmark data, it shows it is hard to achieve a high throughput with only one nodes, and also there is a limit on maximum throughput between two systems and inside system.
+%Although incresing nodes can increse throughput before reach the maximum, throughput achieved by each nodes decrease because of conflict.
+%For these reason, we use following formular for throughput between two systems and inside system.
 %TSUBAME and AMAZON EC2, we use similar model in \cite{ccgrid}:
-\begin{equation}
-throughput=-Ax^2+Bx+C~~ A,B>0\\
-\end{equation}
-we use following equations to determine $A,B,C$
-\begin{equation}
-	\label{throughput equation}
-\begin{cases}
-	-A+B+C=throughput_{one}\\\nonumber
-	\frac{B}{2A}=n_{max}\\\nonumber
-	-An_{max}^2+Bn_{max}+C=throughput_{max}\\
-\end{cases}
-\end{equation}
+%\begin{equation}
+%throughput=-Ax^2+Bx+C~~ A,B>0\\
+%\end{equation}
+%we use following equations to determine $A,B,C$
+%\begin{equation}
+%	\label{throughput equation}
+%\begin{cases}
+%	-A+B+C=throughput_{one}\\\nonumber
+%	\frac{B}{2A}=n_{max}\\\nonumber
+%	-An_{max}^2+Bn_{max}+C=throughput_{max}\\
+%\end{cases}
+%\end{equation}
 
-Since it is hard for one node to fully utilize Internet and Ethernet bandwidth, according to Fig.~\ref{throughput AMAZON to OURLAB}, we assume that one node can achieve 80\% of maximum bandwidth, and by using I/O burst buffer, can achieve 100\% of maximum bandwidth of both Ethernet and Internet, here Ethernet throughput refers to Ethernet connection throughput in public cloud.
+%Since it is hard for one node to fully utilize Internet and Ethernet bandwidth, according to Fig.~\ref{throughput AMAZON to OURLAB}, we assume that one node can achieve 80\% of maximum bandwidth, and by using I/O burst buffer, can achieve 100\% of maximum bandwidth of both Ethernet and Internet, here Ethernet throughput refers to Ethernet connection throughput in public cloud.
 
-First we consider the throughput comparison between direct connection and cache hit cases by using I/O burst buffer.
-If file is buffered in I/O buffer nodes, computing nodes can read it through Ethernet, Fig.~\ref{cache hit}, shows the comparison, we can see that when Ethernet throughput larger than Internet throughput, our solution can achieve a higher I/O throughput, here we assume that Ethernet throuhput can be lower than Internet throughput, but from Fig.~\ref{point to point connection AMAZON}, Fig.~\ref{throughput TSUBAME}, Ethernet usually is faster than Internet, and by using our solution can achieve a high throughput.
+First we compare the I/O throughput between direct connection and I/O burst buffer (both cache miss and cache hit) on TSUBAME and Amazon EC2.
 
-Then, we compare throughput with and without I/O buffer nodes.
-We can see from Fig.~\ref{throughput},although our solution can be limited by both Internet and Ethernet throughput, our I/O burst buffer can fully utilize both Internet and Ethernet. Like previous comparison, when Ethernet is faster than Internet, our solution can achieve a throughput burst even file is not stored in buffer queue in I/O burst buffer like (read data from storage).
+Fig.~\ref{throughput comparison} and Fig.~\ref{throughput cache rate} shows the throughput comparison with and without I/O burst buffer.
+For without I/O burst buffer, each computing nodes will read from and write data to storage directly and concurrently, when number of nodes is small, throughput increases as number of nodes increses, but after throughput reach the Internet throughput(number of nodes equals to 10 in our case), throughput becomes stable, means Internet bandwidth is fully utilized, and since that I/O is limited by Internet bandwidth.
 
-After that, we compare overall cost when use two-side buffer and one-side buffer, since execution time, in our case, I/O time and I/O throughput will affect cost, for Internet and Ethernet throughput, we use \ref{throughput equation}.
-From Fig.~\ref{cost}, 
-Finally, we compare throughput with and without compression, Fig.~\ref{compress rate} shows compress and Fig.~\ref{compress time} shows compress and decompress time on TSUBAME V queue and AMAZON EC2 with a different compress level by using zlib\cite{zlib}.
-We can achieve a high compress rate, but the throughput is low, up to 160MB/s, depends on compress level, it is hard to find a compress library can compress data faster and smaller, so the compress throughput may become a bottleneck.
-On the other hand, the compress rate is high, since the buffer size is limited, if we can make data smaller, it means we can increase the buffer hit rate, Fig.~\ref{cache hit} shows a throughput comparison between cache miss and hit.
+For 0\% cache hit cases, since all data should be read from or write back to storage, throughput shows a similiar trade, also limited by Internet bandwidth.
 
-Fig.~\ref{compress}
+The large difference shows in cache hit 100\%(Fig.~\ref{throughput cache rate}), since all required files are buffered in buffer queue, also buffer queue is not full, computing nodes can read from and write to buffer queue every time.
+As we mentioned, Ethernet throughput in Amazon EC2 shows a strong scalablity, I/O throughput can finially achieve around 2700MB/s, about 20 times faster than direct I/O and also 0\%cache hit cases.
+
+However 100\% cache hit is a ideal condition not pratical, so in Fig.~\ref{throughput cache rate}, we also show predict throughput for 75\%,50\% and 25\% cache hit.
+When there is a cache miss both in read and write, data need to be transfer via both Ethernet and Internet like 0\% cache hit case, and for cache hit, files can be read and written via Ethernet like 100\% cache hit case, so we use two-side Internet throughput($thr_I$) shown in Fig.~\ref{point to point connection LAB}, Ethernet throughput in Amazon($thr_E$) shown in Fig.~\ref{point to point connection AMAZON} and following formular to evaluate throughput for each cache hit rate.
+
+\[throughput=\frac{1}{MAX\{\frac{{hit\_rate}}{thr_E},\frac{1-hit\_rate}{thr_I}+\frac{1-hit\_rate}{thr_E}\}}\]
+
+and result is shown in Fig.~\ref{throughput cache rate}, we can see that althrough, 100\% cache hit achieve a high throughput, even 75\% cache hit is much lower than 100\%, it is because of the great gap between Ethernet bandwidth and Internet bandwidth, also data can transfer faster in Ethernet, user application must wait until cache miss data transferred through Internet.
+
+
+%If file is buffered in I/O buffer nodes, computing nodes can read it through Ethernet, Fig.~\ref{cache hit}, shows the comparison, we can see that when Ethernet throughput larger than Internet throughput, our solution can achieve a higher I/O throughput, here we assume that Ethernet throuhput can be lower than Internet throughput, but from Fig.~\ref{point to point connection AMAZON}, Fig.~\ref{throughput TSUBAME}, Ethernet usually is faster than Internet, and by using our solution can achieve a high throughput.
+
+%Then, we compare throughput with and without I/O buffer nodes.
+%We can see from Fig.~\ref{throughput},although our solution can be limited by both Internet and Ethernet throughput, our I/O burst buffer can fully utilize both Internet and Ethernet. Like previous comparison, when Ethernet is faster than Internet, our solution can achieve a throughput burst even file is not stored in buffer queue in I/O burst buffer like (read data from storage).
+
+Then we compare overall cost with and without I/O burst buffer, As we mentioned, cost will be determined by both number of nodes and execution time, 
+As we showed, By using I/O burst buffer, we can achieve a high I/o throughput, and reduce both the execution time and cost, however, I/O buffer node also will be charged, hence we use following formular to evaluate cost
+\[\frac{Data~size}{throughput}*cost*node\]
+According to Amazon pricing policy, m3.xlarge instance is charged \$0.405 for each hour usage in Asia Pacific(Tokyo).
+
+Fig.~\ref{cost} shows cost comparison between each cache hit rate and direct I/O, which read or write 100GB data, we can see that cost
+%Since we assume number of I/O buffer node increases as number of computing nodes increases, 
+%After that, we compare overall cost when use two-side buffer and one-side buffer, since execution time, in our case, I/O time and I/O throughput will affect cost, for Internet and Ethernet throughput, we use. 
+%From Fig.~\ref{cost}, 
