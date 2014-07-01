@@ -84,42 +84,75 @@ First we compare I/O throughputs of direct connection with the throughput of  I/
 %In this simulation, we assume that both I/O buffer nodes and computing nodes use m3.xlarge instance and Amazon Linux AMI, and the number of I/O buffer nodes is equal to number of computing nodes in order to achieve a maximum Ethernet throughput.
 In this simulation, the number of I/O buffer nodes is equal to the number of computing nodes. This configuration can achieve a maximum I/O throughputs.
 %In practice, I/O buffer nodes may have a better Ethernet condition than computing nodes, but there also will be many users running their application on large amount of computing nodes, so there can be several computing nodes reading data from or writing data to one I/O nodes, Ethernet bandwidth also can be fully utilized. 
-In practice, an I/O buffer node may have higher network throghput condition than computing nodes, 
-but there also will be many users running their application on large amount of computing nodes, 
-so there can be several computing nodes reading data from or writing data to one I/O nodes, 
-Ethernet bandwidth also can be fully utilized. 
+In practice, an I/O buffer node may have higher network throghput than computing nodes, and the throughput can not fully utilized.
+But we assume there are many users running their applications on large amount of computing nodes, which concurrently read data from or write data to one I/O bust buffer nodes, the network throughput to I/O buffer is fully utilized.
 
-Fig.~\ref{throughput comparison} and Fig.~\ref{throughput cache rate} shows the throughput comparison with and without I/O burst buffer.
-For direct I/O, each computing nodes will read from and write data to storage directly and concurrently, when number of nodes is small, throughput increases as number of nodes increses, but after throughput reach the Internet bandwidth( 120MB/s when number of nodes equals to 10 in our case), throughput becomes stable, means Internet bandwidth is fully utilized, and since that I/O is limited by Internet bandwidth.
 
-For 0\% cache hit cases, since all data should be read from or write back to storage, throughput shows a similiar trade, also limited by Internet bandwidth.
+Fig.~\ref{throughput comparison} and Fig.~\ref{throughput cache rate} shows the throughput comparisons between systems  with and without I/O burst buffers.
+For direct I/O, each computing nodes read from and write data to storage directly and concurrently.
+When the number of nodes is small, throughput increases as the number of nodes increses.
+However, after throughput reach the peak bandwidth between two systems, (120MB/s when number of nodes equals to 10 in our case), 
+the throughput becomes flat. %, means Internet bandwidth is fully utilized, and since that I/O is limited by Internet bandwidth.
 
-The large difference shows in cache hit 100\%(Fig.~\ref{throughput cache rate}), since all required files are buffered in buffer queue, also buffer queue is not full, computing nodes can read from and write to buffer queue each time.
-As we mentioned, Ethernet throughput in Amazon EC2 shows a strong scalablity, I/O throughput can finially achieve around 2700MB/s, about 20 times faster than direct I/O and also 0\%cache hit cases.
+%For 0\% cache hit cases, since all data should be read from or write back to storage, throughput shows a similiar trade, also limited by Internet bandwidth.
+In 0\% cache rate cases, since all data should be read from or write back to storage, 
+the throughputs show a similiar trend.%, also limited by Internet bandwidth.
+\kento{Please explain why 0\% is better than others}
 
-However 100\% cache hit is a ideal condition not pratical, so in Fig.~\ref{throughput cache rate}, we also show predict throughput for 75\%,50\% and 25\% cache hit rate.
-When there is a cache miss both in read and write, data need to be transfer via both Ethernet and Internet like 0\% cache hit case, and for cache hit, files can be read and written via Ethernet like 100\% cache hit case, so we use two-side Internet throughput($thr_I$) shown in Fig.~\ref{point to point connection LAB}, Ethernet throughput in Amazon($thr_E$) shown in Fig.~\ref{point to point connection AMAZON} and following formular to evaluate throughput for each cache hit rate.
+The large difference is shown in cache hit 100\%(Fig.~\ref{throughput cache rate}).
+In the 100\% cases, all reading files are buffered in buffer queue, 
+also buffer queue is not full for writes.
+Thus, computing nodes can read from and write to buffer queue each time withouth accessing to remote storage, 
+and the throghputs becomens identical to network throughputs between computing nodes and I/O buffer nodes.
+As we mentioned, network throughput between two instances within Amazon EC2 shows the scalablity even if we increase the pairs of two instances.
+I/O throughput can finially achieve around 2700MB/s, which is about 20 times faster than one of direct I/O.% and also 0\%cache hit cases.
 
+However, the 100\% cache rate is an ideal condition, and is not pratical in real applications, 
+so we also estimate the throughputs under 75\%,50\% and 25\% cache rates in Fig.~\ref{throughput cache rate}.
+%When there is a cache miss both in read and write, data need to be transfer via both Ethernet and Internet like 0\% cache hit case, and for cache hit, files can be read and written via Ethernet like 100\% cache hit case, so we use two-side Internet throughput($thr_I$) shown in Fig.~\ref{point to point connection LAB}, Ethernet throughput in Amazon($thr_E$) shown in Fig.~\ref{point to point connection AMAZON} and following formular to evaluate throughput for each cache hit rate.
+If the cache rate is low, most of reading and writing data need to be transferred via a network between the two systems, i.e, TSUBAME and Amazon EC2.
+If applications can use the cache for read or write, I/O throughputs can be improved depending on the cache rates.
+To estimate the throughputs under different cache rates, we use the below model.
+ 
 \[throughput=\frac{1}{MAX\{\frac{{hit\_rate}}{thr_E},\frac{1-hit\_rate}{thr_I}+\frac{1-hit\_rate}{thr_E}\}}\]
 
-Result is shown in Fig.~\ref{throughput cache rate}, we can see that althrough, 100\% cache hit achieve a high throughput, even 75\% cache hit is much lower than 100\%, it is because of the great gap between Ethernet bandwidth and Internet bandwidth, also data can transfer faster in Ethernet, user application must wait until cache miss data transferred through Internet.
+ we denote $thr_I$ as two-side network throughput shown in Fig.~\ref{point to point connection LAB}, 
+$thr_E$ network throughput within Amazon EC2 shown in Fig.~\ref{point to point connection AMAZON}.
 
-In this simulation we only consider one job use up to 20 computing nodes, but in practice, large number of computing nodes issue read and write request concurrently, Fig.~\ref{maximum throughput} shows the maximum throughput of different cache hit rate and direct I/O, we can see that although reading can not achieve a cache hit rate, until buffer queue is full, writing can achieve a extremely high throughput.
+%Result is shown in Fig.~\ref{throughput cache rate}, we can see that althrough, 100\% cache hit achieve a high throughput, even 75\% cache hit is much lower than 100\%, it is because of the great gap between Ethernet bandwidth and Internet bandwidth, also data can transfer faster in Ethernet, user application must wait until cache miss data transferred through Internet.
+As shown in Fig.~\ref{throughput cache rate}, we can also see that I/O throughputs in 75\% cache rate are much lower than ones of 100\% cache rate.
+This is because of a larege gap between network throughputs within Amazon EC2 and between the two systems, 
+applications must wait until reading or writing data, which is not in caches, are transferred from or to remote storage.
+
+In this simulation we only consider one job use up to 20 computing nodes, but in practice, a large number of computing nodes issue read and write requests concurrently, 
+Fig.~\ref{maximum throughput} shows the maximum throughput of different cache rates and direct I/O.
+%we can see  that although reading can not achieve a cache hit rate, until buffer queue is full, writing can achieve a extremely high throughput
+We can see that write can achieve an extremely high throughput using caches on I/O burst buffer nodes while read can not achieve that high throughput unless target files are in caches.
 %If file is buffered in I/O buffer nodes, computing nodes can read it through Ethernet, Fig.~\ref{cache hit}, shows the comparison, we can see that when Ethernet throughput larger than Internet throughput, our solution can achieve a higher I/O throughput, here we assume that Ethernet throuhput can be lower than Internet throughput, but from Fig.~\ref{point to point connection AMAZON}, Fig.~\ref{throughput TSUBAME}, Ethernet usually is faster than Internet, and by using our solution can achieve a high throughput.
 
 %Then, we compare throughput with and without I/O buffer nodes.
 %We can see from Fig.~\ref{throughput},although our solution can be limited by both Internet and Ethernet throughput, our I/O burst buffer can fully utilize both Internet and Ethernet. Like previous comparison, when Ethernet is faster than Internet, our solution can achieve a throughput burst even file is not stored in buffer queue in I/O burst buffer like (read data from storage).
 
-Then we compare overall cost with and without I/O burst buffer, As we mentioned, cost will be determined by both number of nodes and execution time. 
-As we showed, By using I/O burst buffer, we can achieve a high I/O throughput, and reduce both the execution time and cost, however, I/O buffer node also will be charged, hence we use following formular to evaluate cost
+%Then we compare overall cost with and without I/O burst buffer, As we mentioned, cost will be determined by both number of nodes and execution time. 
+Then we compare overall cost between systems with and without I/O burst buffers.
+As we mentioned, the cost is  determined by both the number of nodes and the execution time. 
+%As we showed, By using I/O burst buffer, we can achieve a high I/O throughput, and reduce both the execution time and cost, however, I/O buffer node also will be charged, hence we use following formular to evaluate cost
+As we showed, by using I/O burst buffers, we can achieve a high I/O throughput, 
+and reduce both the execution time and cost.
+However, I/O buffer nodes also is charged, hence we use following formular to evaluate the cost.
 \[cost=\frac{Data~size}{throughput}\times cost\_per\_hour\times node\]
-According to Amazon pricing policy, m3.xlarge instance is charged \$0.405 for each hour usage in Asia Pacific(Tokyo).
-For direct I/O, nodes is equal to number of computing nodes, but for I/O burst buffer, since we assume that number of I/O nodes is equal to number of computing nodes, here the value of node in above formular will be 2 times number of computing nodes.
+%According to the Amazon pricing policy, m3.xlarge instance is charged  \$0.405 for each hour usage in Asia Pacific(Tokyo).
+According to the Amazon pricing policy, m3.xlarge instance is charged by \$0.405 par hour in a Asia Pacific region (Tokyo).
+%For direct I/O, nodes is equal to number of computing nodes, but for I/O burst buffer, since we assume that number of I/O nodes is equal to number of computing nodes, here the value of node in above formular will be 2 times number of computing nodes.
+For direct I/O, we denotes $node$ as the total number of instances used at Amazon EC2. 
+Therefore, $node$ becomes the total number of compute nodes in a system with direct I/O, while $node$ is equal to the total number of both computing nodes and I/O buffer nodes in a system with I/O nodes.
+Since we assume that the number of I/O nodes is equal to the number of computing nodes, $node$ for a systen with I/O nodes becomes 2 times higher than $node$ for a system with direct I/O.
 
-Fig.~\ref{cost} shows cost comparison between each cache hit rate and direct I/O, which read or write 100GB data, we can see that cost grows as number of nodes grows, except for 100\% cache hit, which throughput is proportional to nodes number.
-As the Fig.~\ref{cost} shows, if cache hit rate is higher than 50\%, the overall cost using I/O burst buffer will lower than direct I/O, however, if cache hit rate is lower than 50\%, using I/O burst buffer will cost more.
+Fig.~\ref{cost} shows cost comparison between each cache hit rate and direct I/O, which read or write 100GB data.
+As shown in the figure,  we can see that cost grows as the number of nodes grows while there is an exception for 100\% cache hit, which throughput is proportional to nodes number.
+As shown in Fig.~\ref{cost}, if cache rate is higher than 50\%, the overall cost using I/O burst buffers become lower than direct I/O, however, if cache rate is lower than 50\%, using I/O burst buffer cost more.
 
-From above simulations, we can see that if we can achieve a high cache hit rate, we can achieve a high throughput up to 4-20 times faster than direct I/O as well as a low cost up to 2-12 times lower than direct I/O for 20 client nodes.
+From above simulations, we can see that if we can achieve a high cache rate, we can achieve a high throughput up to 4-20 times faster than direct I/O as well as a low cost up to 2-12 times lower than direct I/O for 20 client nodes.
 It is may be difficult for read data cache hit rate to be higher than 50\% (can be possible according to data locality), but it is reasonable for write data can be buffered in buffer queue, since public clouds usually provide instance with large size of memory, and it is easy to achieve a Tera size of buffer queue.
 %Since we assume number of I/O buffer node increases as number of computing nodes increases, 
 %After that, we compare overall cost when use two-side buffer and one-side buffer, since execution time, in our case, I/O time and I/O throughput will affect cost, for Internet and Ethernet throughput, we use. 
