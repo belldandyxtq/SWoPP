@@ -1,0 +1,2 @@
+AMAZON EC2 => Amazon EC2
+I/O burst buffer, I/O bursting buffer => cloud-based burst buffer (CBB)

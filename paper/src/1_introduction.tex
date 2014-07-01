@@ -1,16 +1,19 @@
 \section{Introduction}
 \label{sec:introduction}
-Supercomputers provide an increasing number of scientific applications with high computational power by a large number of processors, large bandwidth memory and low leatency interconnects.
+Supercomputers provide an increasing number of scientific applications with high computational power by a large number of processors, large bandwidth memory and interconnects.
 %Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
 %Although supercomputers can offer the high computational power, there are several situations where a supercomputer can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until previous job finished although there are 49 nodes remainning available.
 %high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
-Although supercomputers can offer high capablity of computation, it is not unlimited, for some request peak, computation resource in supercomputer can not meet the needs of user, or simply user requesst more resource than supercomputers have, also some jobs require a exclusive usage for computing nodes, like grand challenge, will occpy a great amount of computation resource, leads inadequate of reourse for other job.
-Another problem is the power problem in summer, in order to reduce power consumption, some nodes will be forced to be shut down (peak shift in TSUBAME\cite{TSUBAME}), reducing numbers of nodes will make the first problem more serous.
+Although supercomputers can also offer high computational capacity, the computational resources are not unlimited. 
+Supercomputers can not meet the demands of users when the demands exceed the limit. 
+For example, on grand challnge projects, computational resources are exclusively used for the scientific discoveries~\cite{Scientific_Grand_Challenges_Crosscutting_Technologies_for_Computing_at_the_Exascale, Scientific_Grand_Challenges_in_National_Security_the_Role_of_Computing_at_the_Extreme_Scale}, and the system can not provide adequate resources for other jobs.
+In addition, under power badget constrain~\cite{Exploring_Hardware_Overprovisioning_in_Power-constrained_High_Performance_Computing,Operation_of_TSUBAME_2_0_Green_Supercomputer_dealing_with_Power_Crisis}, a part of compute nodes are required to be shutdown to reduce its power consumption, which also leads inadequate of resources for all users. 
 
-One solution is federating a supercomputer with a public cloud,
-and moving a part of jobs to the public cloud when there are not enough
+One of solutions to provide adequate computational resources under the constrains, is federating a supercomputer with public cloud.
+By moving a part of jobs to the public cloud when there are not enough
 computing nodes available for user's requests, which is known as \emph{cloud bursting}.
+\cite{Optimizing_Service_Level_Agreements_for_Autonomic_Cloud_Bursting_Schedulers, A_Framework_for_Data-Intensive_Computing_with_Cloud_Bursting}
 Although cloud bursting is technically feasible~\cite{Eucalyptus,stratos,Seagull}, 
 and is employed by several private companies, 
 there is a significant performance gap between supercomputers and clouds, 
