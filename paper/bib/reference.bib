@@ -14,14 +14,23 @@
 	refdate = "2014-06-20"
 }
 
-@conference{checkpointing,
-	author = "Kento Sato and Naoya Maruyama and Kathryn Mohror"#
-		"and Adam Moody and Todd Gamblin and Bronis R. de Supinski and Satoshi Matsuoka",
-	title = "Design and modeling of a non-blocking checkpointing system",
-	organization = "SC '12",
-	year = "2012"
-}
-
+@inproceedings{checkpointing,
+	author = {Sato, Kento and Maruyama, Naoya and Mohror, Kathryn and Moody, Adam and Gamblin, Todd and de Supinski, Bronis R. and Matsuoka, Satoshi},
+	title = {Design and Modeling of a Non-blocking Checkpointing System},
+	booktitle = {Proceedings of the International Conference on High Performance Computing, Networking, Storage and Analysis},
+	series = {SC '12},
+	year = {2012},
+	isbn = {978-1-4673-0804-5},
+	location = {Salt Lake City, Utah},
+	pages = {19:1--19:10},
+	articleno = {19},
+	numpages = {10},
+	url = {http://dl.acm.org/citation.cfm?id=2388996.2389022},
+	acmid = {2389022},
+	publisher = {IEEE Computer Society Press},
+	address = {Los Alamitos, CA, USA},
+	keywords = {Markov model, checkpoint/restart, fault tolerance},
+} 
 @webpage{iperf,
 	title = "Iperf",
 	organization = "The Board of Trustees of the University of Illinois",
@@ -29,12 +38,25 @@
 	refdate = "2014-06-20"
 }
 
-@conference{optimal_job,
-	author = "Yumiko Kasae and Masato Oguchi",
-	title = "Proposal for an optimal job allocation method for data-intensive applications based on multiple costs balancing in a hybrid cloud environment",
-	organization = "ICUIMC '13",
-	year = "2013"
-}
+@inproceedings{optimal_job,
+	author = {Kasae, Yumiko and Oguchi, Masato},
+	title = {Proposal for an Optimal Job Allocation Method for Data-intensive Applications Based on Multiple Costs Balancing in a Hybrid Cloud Environment},
+	booktitle = {Proceedings of the 7th International Conference on Ubiquitous Information Management and Communication},
+	series = {ICUIMC '13},
+	year = {2013},
+	isbn = {978-1-4503-1958-4},
+	location = {Kota Kinabalu, Malaysia},
+	pages = {5:1--5:8},
+	articleno = {5},
+	numpages = {8},
+	url = {http://doi.acm.org/10.1145/2448556.2448561},
+	doi = {10.1145/2448556.2448561},
+	acmid = {2448561},
+	publisher = {ACM},
+	address = {New York, NY, USA},
+	keywords = {cost balance, data processing, hybrid cloud, load balancing, performance},
+} 
+	
 @webpage{AMAZON_AWS,
 	title = "AMAZON AWS",
 	organization = "AMAZON",
@@ -68,31 +90,76 @@
 	url = "http://tsubame.gsic.titech.ac.jp/",
 	refdate = "2014-05-20"
 }
-@conference{Workload,
-	title = "Network-aware impact determination algorithms for service workflow deployment in hybrid clouds",
-	author = "Hendrik Moens	and Eddy Truyen and Stefan Walraven and Wouter Joosen and Bart Dhoedt and Filip De Turck",
-	organization = "CNSM '12",
-	year = "2012"
-}
-@conference{Seagull,
-	title = "Cost-Aware Cloud Bursting for Enterprise Applications",
-	author = "Tian Guo and Upendra Sharma and Prashant Shenoy and Timothy Wood and Sambit Sahu",
-	organization = "USENIX 2012 Annual Technical Conference",
-	year = "2012"
-}
-@conference{ccgrid,
-	title = "Bridging Data in the Clouds: An Environment-Aware System for Geographically Distributed Data Transfers",
-	author = "Radu Tudoran and Alexandru Costan and Rui Wang and Luc Bougé and Gabriel Antoniu ",
-	organization = "14th IEEE/ACM International Symposium on Cluster, Cloud and Grid Computing (2014)",
-	year = "2014"
+@inproceedings{Workload,
+	author = {Moens, Hendrik and Truyen, Eddy and Walraven, Stefan and Joosen, Wouter and Dhoedt, Bart and De Turck, Filip},
+	title = {Network-aware Impact Determination Algorithms for Service Workflow Deployment in Hybrid Clouds},
+	booktitle = {Proceedings of the 8th International Conference on Network and Service Management},
+	series = {CNSM '12},
+	year = {2013},
+	isbn = {978-1-4503-2210-2},
+	location = {Las Vegas, Nevada},
+	pages = {28--36},
+	numpages = {9},
+	url = {http://dl.acm.org/citation.cfm?id=2499406.2499410},
+	acmid = {2499410},
+	publisher = {International Federation for Information Processing},
+	address = {Laxenburg, Austria, Austria},
+	keywords = {distributed computing, hybrid clouds, workflow deployment},
+} 
+
+@article{Seagull,
+	author = {Guo, Tian and Sharma, Upendra and Shenoy, Prashant and Wood, Timothy and Sahu, Sambit},
+	title = {Cost-Aware Cloud Bursting for Enterprise Applications},
+	journal = {ACM Trans. Internet Technol.},
+	issue_date = {May 2014},
+	volume = {13},
+	number = {3},
+	month = may,
+	year = {2014},
+	issn = {1533-5399},
+	pages = {10:1--10:24},
+	articleno = {10},
+	numpages = {24},
+	url = {http://doi.acm.org/10.1145/2602571},
+	doi = {10.1145/2602571},
+	acmid = {2602571},
+	publisher = {ACM},
+	address = {New York, NY, USA},
+	keywords = {Hybrid clouds, live migration, prototype, resource management},
+} 
+
+@inproceedings{ccgrid,
+	hal_id = {hal-00978153},
+	url = {http://hal.inria.fr/hal-00978153},
+	title = {{Bridging Data in the Clouds: An Environment-Aware System for Geographically Distributed Data Transfers}},
+	author = {Tudoran, Radu and Costan, Alexandru and Wang, Rui and Boug{\'e}, Luc and Antoniu, Gabriel},
+			    abstract = {{Today's continuously growing cloud infrastructures provide support for processing ever increasing amounts of scientific data. Cloud resources for computation and storage are spread among globally distributed datacenters. Thus, to leverage the full computation power of the clouds, global data processing across multiple sites has to be fully enabled. However, managing data across geographically distributed datacenters is not trivial as it involves high and variable latencies among sites which come at a high monetary cost. In this work, we propose a uniform data management system for scientific applications running across geographically distributed sites. Our solution is environment aware, as it monitors and models the global cloud infrastructure, and offers predictable data handling performance for transfer cost and time. In terms of efficiency, it provides the applications with the possibility to set a tradeoff between money and time and optimizes the transfer strategy accordingly. The system was validated on Microsoft's Azure cloud across the 6 EU and US datacenters. The experiments were conducted on hundreds of nodes using both synthetic benchmarks and the real life A-Brain application. The results show that our system is able to model and predict well the cloud performance and to leverage this into efficient data dissemination. Our approach reduces the monetary costs and transfer time by up to 3 times.}},
+	language = {Anglais},
+	affiliation = {KerData - INRIA - IRISA},
+	booktitle = {{14th IEEE/ACM International Symposium on Cluster, Cloud and Grid Computing}},
+        address = {Chicago, {\'E}tats-Unis},
+        audience = {internationale },
+	year = {2014},
+	month = May,
+	pdf = {http://hal.inria.fr/hal-00978153/PDF/CCGrid2014\_Camera\_Ready.pdf},
 }
 
-@conference{time_and_cost,
-	title = "Time and Cost Sensitive Data-Intensive Computing on Hybrid Clouds",
-	author = "Tekin Bicer and David Chiu and Gagan Agrawal",
-	organization = "CCGRID '12 Proceedings of the 2012 12th IEEE/ACM International Symposium on Cluster, Cloud and Grid Computing (ccgrid 2012)",
-	year = "2012"
-}
+@inproceedings{time_and_cost,
+	author = {Bicer, Tekin and Chiu, David and Agrawal, Gagan},
+	title = {Time and Cost Sensitive Data-Intensive Computing on Hybrid Clouds},
+	booktitle = {Proceedings of the 2012 12th IEEE/ACM International Symposium on Cluster, Cloud and Grid Computing (Ccgrid 2012)},
+	series = {CCGRID '12},
+	year = {2012},     
+	isbn = {978-0-7695-4691-9},
+	pages = {636--643},
+	numpages = {8},
+	url = {http://dx.doi.org/10.1109/CCGrid.2012.95},
+	doi = {10.1109/CCGrid.2012.95},
+	acmid = {2310113},
+	publisher = {IEEE Computer Society},
+	address = {Washington, DC, USA},
+	keywords = {Data-intensive computing, Map-Reduce, Performance modeling, Cloud computing, Hybrid cloud},
+} 
 
 @inproceedings{Scientific_Grand_Challenges_Crosscutting_Technologies_for_Computing_at_the_Exascale,
  author = {Brown, Devid L. and Messina, Paul},
@@ -164,9 +231,43 @@ keywords={cloud computing;data analysis;cloud bursting;cloud resources;data anal
 doi={10.1109/CLUSTER.2011.21},}
 
 
+@inproceedings{Chiba,
+author = {Chiba, Tatsuhiro and den Burger, Mathijs and Kielmann, Thilo and Matsuoka, Satoshi},
+title = {Dynamic Load-Balanced Multicast for Data-Intensive Applications on Clouds},
+booktitle = {Proceedings of the 2010 10th IEEE/ACM International Conference on Cluster, Cloud and Grid Computing},
+series = {CCGRID '10},
+year = {2010},
+isbn = {978-0-7695-4039-9},
+pages = {5--14},
+numpages = {10},
+url = {http://dx.doi.org/10.1109/CCGRID.2010.63},
+doi = {10.1109/CCGRID.2010.63},
+acmid = {1845211},
+publisher = {IEEE Computer Society},
+address = {Washington, DC, USA},
+keywords = {Cloud Computing, Multicast Algorithm, Amazon EC2/S3, Work Stealing},
+}
+
 @webpage{zlib,
 	title = "zlib",
 	organization ="private",
 	url = "http://www.zlib.net/",
 	refdate = "2014-05-20",
 }
+@inproceedings{MATE-EC2,
+	author = {Bicer, Tekin and Chiu, David and Agrawal, Gagan},
+	title = {MATE-EC2: A Middleware for Processing Data with AWS},
+	booktitle = {Proceedings of the 2011 ACM International Workshop on Many Task Computing on Grids and Supercomputers},
+	series = {MTAGS '11},
+	year = {2011},
+	isbn = {978-1-4503-1145-8},
+	location = {Seattle, Washington, USA},
+	pages = {59--68},
+	numpages = {10},
+	url = {http://doi.acm.org/10.1145/2132876.2132889},
+	doi = {10.1145/2132876.2132889},
+	acmid = {2132889},
+	publisher = {ACM},
+	address = {New York, NY, USA},
+	keywords = {AWS, EC2, S3, cloud computing, mapreduce},
+} 
