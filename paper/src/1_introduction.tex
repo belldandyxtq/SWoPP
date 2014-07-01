@@ -1,34 +1,43 @@
 \section{Introduction}
 \label{sec:introduction}
-Supercomputers provide an increasing number of scientific applications with high computational power by a large number of processors, large bandwidth memory and low leatency interconnects.
+Supercomputers provide an increasing number of scientific applications with high computational power by a large number of processors, large bandwidth memory and interconnects.
 %Data size need to be processed grows rapidly these days, which is known as Big Data, people perfer to use supercomputer to analyze Big Data for it supports high parallelism.
 %Multi-user can use supercomputer at the same by using batch queue system which manage nodes and job submission.
 %Although supercomputers can offer the high computational power, there are several situations where a supercomputer can not satisfy user's demands even there are still some idle nodes, consider there are 50 nodes available, a user submit a serial application use only one node for an hour, after that, a job using 50 nodes is submitted, and have to wait until previous job finished although there are 49 nodes remainning available.
 %high parallel application runs faster on Supercomputer for fully usage of computing resource, but a serial application will occupy computing nodes for a long time causing other application must wait.
-Although supercomputers can offer high capablity of computation, it is not unlimited, for some request peak, computation resource in supercomputer can not meet the needs of user, or simply user requesst more resource than supercomputers have, also some jobs require a exclusive usage for computing nodes, like grand challenge, will occpy a great amount of computation resource, leads inadequate of reourse for other job.
-Another problem is the power problem in summer, in order to reduce power consumption, some nodes will be forced to be shut down (peak shift in TSUBAME\cite{TSUBAME}), reducing numbers of nodes will make the first problem more serous.
+Although supercomputers can also offer high computational capacity, the computational resources are not unlimited. 
+Supercomputers can not meet the demands of users when the demands exceed the limit. 
+For example, on grand challnge projects, computational resources are exclusively used for the scientific discoveries~\cite{Scientific_Grand_Challenges_Crosscutting_Technologies_for_Computing_at_the_Exascale, Scientific_Grand_Challenges_in_National_Security_the_Role_of_Computing_at_the_Extreme_Scale}, and the system can not provide adequate resources for other jobs.
+In addition, under power badget constrain~\cite{Exploring_Hardware_Overprovisioning_in_Power-constrained_High_Performance_Computing,Operation_of_TSUBAME_2_0_Green_Supercomputer_dealing_with_Power_Crisis}, a part of compute nodes are required to be shutdown to reduce its power consumption, which also leads inadequate of resources for all users. 
 
-One solution is federating a supercomputer with a public cloud,
-and moving a part of jobs to the public cloud when there are not enough
-computing nodes available for user's requests, which is known as \emph{cloud bursting}.
+One of solutions to provide adequate computational resources under the constrains, is federating the supercomputer with public clouds.
+By moving a part of jobs to public clouds when there are not enough
+compute nodes available, we can meet the needs for users' requests even under the constrains, which is known as \emph{cloud bursting}~\cite{Optimizing_Service_Level_Agreements_for_Autonomic_Cloud_Bursting_Schedulers, A_Framework_for_Data-Intensive_Computing_with_Cloud_Bursting}.
 Although cloud bursting is technically feasible~\cite{Eucalyptus,stratos,Seagull}, 
-and is employed by several private companies, 
-there is a significant performance gap between supercomputers and clouds, 
-there will still be several problems when we try to federate a supercomputer with a public cloud, 
-and there are several studies on cloud burst about cost\cite{Seagull}, execution time\cite{time_and_cost}, etc..
-The biggest problem will be data transfer throughput between two environment, 
-since we want to move some jobs from supercomputer to public cloud, I/O data need to transfer between these two system, supercomputers usual deal with Gigabyte or even Petabyte input and output of data, 
-low I/O throughput will suffer supercomputer user. This paper focuses on methodology 
-of increasing throughput when we do federation.
+and is employed by several private companies, there are several problems if we apply the techniqu to supercomputers.
+One of the problems is a significant performance gap between supercomputers and public clouds especially in I/O performance
+%there will still be several problems when we try to federate a supercomputer with a public cloud, 
+%and there are several studies on cloud burst about cost\cite{Seagull}, execution time\cite{time_and_cost}, etc..
+%Especially, low I/O performance between supercomputers and public clouds is critical.
+%The biggest problem will be data transfer throughput between two environment, 
+For example, if we migrate a part of jobs from a supercomputer to a public cloud or run jobs on a public cloud insted of a supercomputer, and the jobs need data located in a parallel file system (PFS), the data need to be transfered between the two system.
+% supercomputers usual deal with Gigabyte or even Petabyte input and output of data, 
+Because the two systems are usually geographically distributed, and network throghput between the systems is quite low,
+the low I/O throughput suffers supercomputer users. Thus, improving I/O throughputs between two systems, which are geographically distributed each other, is ciritical in federating supercomputers with public clouds
 
-In this paper, we propose an I/O burst buffer architecture that uses multiple nodes in each system as an I/O nodes 
-to achieve high throughput concurrent data transferring, and an I/O burst buffer model 
-that uses to switch between I/O burst buffer mode and direct connect mode.
+In this paper, we propose cloud-based burst buffers. The cloud-based burst buffers consists of I/O dedicated staging nodes, which cache hot files in the buffers, and enables asynchronous write back for improving both read and write operations to remote file systems.
+We also model the cloud-based burst buffers to optimize  configurations of the cloud-based burst buffers according to dynamically changing environments
+\kento{Do you think this sentence is resonable to describe your model ?}.
+\kento{please summirize the evaluation resutls here.}
+%  architecture that uses multiple nodes in each system as an I/O nodes 
+%to improve I/O throughput concurrent data transferring, and an I/O burst buffer model 
+%that uses to switch between I/O burst buffer mode and direct connect mode.
 %This I/O bursting buffer architecture can be mainly used two situation, first in data I/O, the other one will be when there are some nodes need to migrate from a cloud to another cloud with snapshot, snapshots can be transferred without be stored to shared storage.
 %Since, I/O bursting buffer needs three times data transfer, sometimes direct transfer will achieve a higher throughput, I/O bursting buffer model using a evaluation throughput using I/O bursting buffer and without I/O bursting buffer to determine I/O bursting buffer mode or direct connection mode.
-Also, public cloud usually charges for nodes usage, I/O bursting buffers may reduce the computation time, 
-but I/O nodes will be charged for money, we also provide a cost-based model, to reduce the overall cost.
-\kento{please summirize the evaluation resutls here.}
+%Also, public cloud usually charges for nodes usage, I/O bursting buffers may reduce the computation time, 
+%but I/O nodes will be charged for money, we also provide a cost-based model, to reduce the overall cost.
+
+
 Our contributions can be summrized as following:
 \begin{itemize}
 	\item A cloud-based burst buffer for increasing data transfer throughput between two systems;
@@ -36,7 +45,7 @@ Our contributions can be summrized as following:
         \item Evaluation of the I/O burst buffer architecture based the performance models by using real data obtained from several benchmarks from the TSUBAME supercomputer and AMAZON EC2.
 \end{itemize}
 %2
-The remainder of this paper is organized as follow. 
+The rest of this paper is organized as follows. 
 In Section \ref{sec:motivation}, we clarify the motivation and the background.
 We introduce an overview of the I/O bursting buffer architecture in Section \ref{sec:burst_buffer}, 
 and show the performance models to evaluate the I/O bursting buffer architecture in Section \ref{sec:model}. 
